@@ -1,3 +1,5 @@
+import { AttributeValueTarget } from 'aws-sdk/clients/redshift'
+
 declare namespace NodeJS {
     interface ProcessEnv {
         readonly ACCESS_TOKEN_SALT: string

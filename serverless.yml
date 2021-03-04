@@ -31,15 +31,6 @@ package:
     - package-lock.json
 
 functions:
-
-  describe:
-    handler: dist/describe.handler
-    events:
-      - http:
-          path: '/'
-          method: get
-          integration: lambda-proxy
-
   search:
     handler: dist/search.handler
     events:
