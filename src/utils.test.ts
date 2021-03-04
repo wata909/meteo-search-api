@@ -79,3 +79,20 @@ test('should aggregate data by year', () => {
   )
 })
 
+test('should aggregate data by gridcode', () => {
+  const data = [
+    { gridcode: '111', year: 2001, month: 1, day: 1, tm: 1, pr: 10 },
+    { gridcode: '111', year: 2001, month: 1, day: 2, tm: 2, pr: 12 },
+    { gridcode: '111', year: 2001, month: 1, day: 3, tm: 3, pr: 17 },
+    { gridcode: '222', year: 2001, month: 1, day: 1, tm: 2, pr: 11 },
+    { gridcode: '222', year: 2001, month: 1, day: 2, tm: 3, pr: 14 },
+    { gridcode: '222', year: 2001, month: 1, day: 3, tm: 4, pr: 17 },
+  ]
+  const result = aggregateData(data, 'month')
+  expect(result).toEqual(
+    [
+      { gridcode: '111', year: 2001, month: 1, tm: 2, pr: 13 },
+      { gridcode: '222', year: 2001, month: 1, tm: 3, pr: 14 },
+    ]
+  )
+})
