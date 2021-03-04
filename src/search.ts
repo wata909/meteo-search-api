@@ -1,5 +1,12 @@
 import { Naro } from ".";
-import { errorResponse, validateDateRange, validateGeographicalRange, queryData } from './utils'
+import {
+  errorResponse,
+  validateDateRange,
+  validateGeographicalRange,
+  validateAverageScope,
+  aggregateData,
+  queryData
+} from './utils'
 
 export const handler: Naro.LambdaHandler = async (event, context, callback) => {
 
@@ -8,6 +15,8 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
     const {sy, ey, sm, em} = query
     // geographical range
     const { mcode } = query
+    // average
+    const { average } = query
 
     const dateRange = validateDateRange({sy, ey, sm, em})
     if(!dateRange) {
@@ -19,10 +28,17 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
       return callback(null, errorResponse(400, 'Invalid mesh code.'))
     }
 
+    const validatedAverageScope = validateAverageScope({average})
+    if(!validatedAverageScope) {
+      return callback(null, errorResponse(400, 'Invalid average.'))
+    }
+
     const {startYear, endYear, startMonth, endMonth} = dateRange
     const {meshCode} = geographicalRange
+    const {averageScope} = validatedAverageScope
 
     const data = await queryData({startYear, endYear, startMonth, endMonth, meshCode})
+    const aggregatedData = aggregateData(data, averageScope)
 
     return callback(null, {
       statusCode: 200,
