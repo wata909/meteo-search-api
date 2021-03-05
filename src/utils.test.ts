@@ -26,7 +26,11 @@ test('should not validate date range', () => {
 
 test('should validate geographical range', () => {
   const result = validateGeographicalRange({mcode: '60417050'})
-  expect(result).toEqual({meshCode: '60417050'})
+  expect(result).toEqual({meshCodes: ['60417050']})
+})
+test('should validate multiple geographical range', () => {
+  const result = validateGeographicalRange({mcode: '60417050,60417051'})
+  expect(result).toEqual({meshCodes: ['60417050','60417051']})
 })
 
 test('should not validate geographical range', () => {

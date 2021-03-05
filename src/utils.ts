@@ -84,10 +84,14 @@ export const validateDateRange = ({sy, ey, sm, em}: DateParams) => {
 }
 
 export const validateGeographicalRange = ({mcode}: GeographicalParams) => {
-  if(!mcode || !mcode.match(/[0-9]{7}/)) {
+  if(!mcode || typeof mcode !== 'string') {
     return false
   }
-  return { meshCode: mcode }
+  const meshCodes = mcode.split(',')
+  if(meshCodes.some(meshCode => !meshCode.match(/([0-9]{7})+/))) {
+    return false
+  }
+  return { meshCodes }
 }
 
 export const validateAverageScope = ({average}: AverageScopeParams) => {
@@ -101,11 +105,11 @@ export const validateAverageScope = ({average}: AverageScopeParams) => {
   return false
 }
 
-export const queryData = async (query: QueryDataParams): Promise<APIResponse[]> => {
+export const queryData = async (query: QueryDataParams): Promise<{data: APIResponse[], meshCode: string }> => {
   // NOTE: This is a mock.
-  return [
+  return {data: [
     ["2015-3-1", 5.3, 2.1, 1.2, 3.7, 1.5, 1.2]
-  ]
+  ],meshCode: query.meshCode}
 }
 
 export const aggregateData = (data: APIResponse[], gridcode: string, averageScope: AverageScope) => {

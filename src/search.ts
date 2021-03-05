@@ -34,11 +34,16 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
     }
 
     const {startYear, endYear, startMonth, endMonth} = dateRange
-    const {meshCode} = geographicalRange
+    const {meshCodes} = geographicalRange
     const {averageScope} = validatedAverageScope
 
-    const data = await queryData({startYear, endYear, startMonth, endMonth, meshCode})
-    const aggregation = aggregateData(data, meshCode, averageScope)
+    const aggregations = await Promise.all(
+      meshCodes
+        .map(
+          meshCode => queryData({startYear, endYear, startMonth, endMonth, meshCode})
+            .then(({data, meshCode}) => aggregateData(data, meshCode, averageScope))
+        )
+    )
 
     return callback(null, {
       statusCode: 200,
@@ -46,6 +51,6 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify(aggregation)
+      body: JSON.stringify(aggregations)
     });
 }
