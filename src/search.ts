@@ -38,7 +38,7 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
     const {averageScope} = validatedAverageScope
 
     const data = await queryData({startYear, endYear, startMonth, endMonth, meshCode})
-    const aggregation = aggregateData(data, averageScope)
+    const aggregation = aggregateData(data, meshCode, averageScope)
 
     return callback(null, {
       statusCode: 200,

@@ -38,18 +38,16 @@ type QueryDataParams = {
   meshCode: string
 }
 
-type APIResponse = {
-  gridcode: string,
-  year: number,
-  month: number,
-  day: number,
+export type APIResponse = [
+  d: string,
   tm: number | null,
   pr: number | null,
   tn: number | null,
   sr: number | null,
   tx: number | null,
   sd: number | null,
-}
+]
+
 type AggregationDeployMap = { [key: string]: {
   tm: { sum: number, count: number },
   pr: { sum: number, count: number },
@@ -105,25 +103,28 @@ export const validateAverageScope = ({average}: AverageScopeParams) => {
 
 export const queryData = async (query: QueryDataParams): Promise<APIResponse[]> => {
   // NOTE: This is a mock.
-  return [{
-    gridcode: "53396111",
-    year: 2015,
-    month: 3,
-    day: 1,
-    tm: 5.3,
-    pr: 2.1,
-    tn: 1.2,
-    sr: 3.7,
-    tx: 1.5,
-    sd: 1.2
-  }]
+  return [
+    ["2015-3-1", 5.3, 2.1, 1.2, 3.7, 1.5, 1.2]
+  ]
 }
 
-export const aggregateData = (data: APIResponse[], averageScope: AverageScope) => {
+export const aggregateData = (data: APIResponse[], gridcode: string, averageScope: AverageScope) => {
   if(averageScope === 'day') {
     return data
   } else {
-    const deployMap = data.reduce<AggregationDeployMap>((prev, item) => {
+    const deployMap = data.reduce<AggregationDeployMap>((prev, row) => {
+      const [dateString, tm, pr, tn, sr, tx, sd] = row
+      const [yearString, monthString, dayString] = dateString.split('-')
+      const year = parseInt(yearString, 10)
+      const month = parseInt(monthString, 10)
+      const day = parseInt(dayString, 10)
+      const item = {
+        gridcode,
+        year,
+        month,
+        day,
+        tm, pr, tn, sr, tx, sd
+      }
       const key = averageScope === 'month' ? `${item.gridcode}/${item.year}/${item.month}` : `${item.gridcode}/${item.year}`
       if(!prev[key]) {
         prev[key] = {

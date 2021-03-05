@@ -2,7 +2,8 @@ import {
   validateAverageScope,
   validateDateRange,
   validateGeographicalRange,
-  aggregateData
+  aggregateData,
+  APIResponse,
 } from './utils'
 
 test('should validate date range', () => {
@@ -44,15 +45,15 @@ test('should not validate average scope', () => {
 })
 
 test('should aggregate data by month', () => {
-  const data = [
-    { gridcode: '111', year: 2001, month: 1, day: 1, tm: 1, pr: 10, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '111', year: 2001, month: 1, day: 2, tm: 2, pr: 12, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '111', year: 2001, month: 1, day: 3, tm: 3, pr: 17, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '111', year: 2001, month: 2, day: 1, tm: 2, pr: 11, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '111', year: 2001, month: 2, day: 2, tm: 3, pr: 14, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '111', year: 2001, month: 2, day: 3, tm: 4, pr: 17, tn: null, sr: null, tx: null, sd: null  },
+  const data: APIResponse[] = [
+    ['2001-01-01', 1, 10, null, null, null, null],
+    ['2001-01-02', 2, 12, null, null, null, null],
+    ['2001-01-03', 3, 17, null, null, null, null],
+    ['2001-02-01', 2, 11, null, null, null, null],
+    ['2001-02-02', 3, 14, null, null, null, null],
+    ['2001-02-03', 4, 17, null, null, null, null],
   ]
-  const result = aggregateData(data, 'month')
+  const result = aggregateData(data, '111', 'month')
   expect(result).toEqual(
     [
       { gridcode: '111', year: 2001, month: 1, tm: 2, pr: 13 },
@@ -62,15 +63,15 @@ test('should aggregate data by month', () => {
 })
 
 test('should aggregate data by year', () => {
-  const data = [
-    { gridcode: '111', year: 2001, month: 1, day: 1, tm: 1, pr: 10, tn: null, sr: null, tx: null, sd: null },
-    { gridcode: '111', year: 2001, month: 1, day: 2, tm: 2, pr: 12, tn: null, sr: null, tx: null, sd: null },
-    { gridcode: '111', year: 2001, month: 1, day: 3, tm: 3, pr: 17, tn: null, sr: null, tx: null, sd: null },
-    { gridcode: '111', year: 2002, month: 2, day: 1, tm: 2, pr: 11, tn: null, sr: null, tx: null, sd: null },
-    { gridcode: '111', year: 2002, month: 2, day: 2, tm: 3, pr: 14, tn: null, sr: null, tx: null, sd: null },
-    { gridcode: '111', year: 2002, month: 2, day: 3, tm: 4, pr: 17, tn: null, sr: null, tx: null, sd: null },
+  const data: APIResponse[] = [
+    [ '2001-1-1', 1, 10, null, null, null, null ],
+    [ '2001-1-2', 2, 12, null, null, null, null ],
+    [ '2001-1-3', 3, 17, null, null, null, null ],
+    [ '2002-2-1', 2, 11, null, null, null, null ],
+    [ '2002-2-2', 3, 14, null, null, null, null ],
+    [ '2002-2-3', 4, 17, null, null, null, null ],
   ]
-  const result = aggregateData(data, 'year')
+  const result = aggregateData(data, '111', 'year')
   expect(result).toEqual(
     [
       { gridcode: '111', year: 2001, tm: 2, pr: 13 },
@@ -80,18 +81,27 @@ test('should aggregate data by year', () => {
 })
 
 test('should aggregate data by gridcode', () => {
-  const data = [
-    { gridcode: '111', year: 2001, month: 1, day: 1, tm: 1, pr: 10, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '111', year: 2001, month: 1, day: 2, tm: 2, pr: 12, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '111', year: 2001, month: 1, day: 3, tm: 3, pr: 17, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '222', year: 2001, month: 1, day: 1, tm: 2, pr: 11, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '222', year: 2001, month: 1, day: 2, tm: 3, pr: 14, tn: null, sr: null, tx: null, sd: null  },
-    { gridcode: '222', year: 2001, month: 1, day: 3, tm: 4, pr: 17, tn: null, sr: null, tx: null, sd: null  },
+  const data1:APIResponse[] = [
+    ['2001-01-01',1, 10, null, null, null, null],
+    ['2001-01-02',2, 12, null, null, null, null],
+    ['2001-01-03',3, 17, null, null, null, null],
   ]
-  const result = aggregateData(data, 'month')
-  expect(result).toEqual(
+
+  const data2: APIResponse[] = [
+    ['2001-01-01',2, 11, null, null, null, null],
+    ['2001-01-02',3, 14, null, null, null, null],
+    ['2001-01-03',4, 17, null, null, null, null],
+  ]
+
+  const result1 = aggregateData(data1, '111', 'month')
+  const result2 = aggregateData(data2, '222', 'month')
+  expect(result1).toEqual(
     [
       { gridcode: '111', year: 2001, month: 1, tm: 2, pr: 13 },
+    ]
+  )
+  expect(result2).toEqual(
+    [
       { gridcode: '222', year: 2001, month: 1, tm: 3, pr: 14 },
     ]
   )
