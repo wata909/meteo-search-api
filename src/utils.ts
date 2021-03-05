@@ -28,17 +28,23 @@ type AverageScopeParams = {
   average: string | undefined
 }
 
+type SeparatorTypesParams = {
+  separator: string | undefined,
+}
+
 type AverageScope = 'day' | 'month' | 'year'
+
+type SeparatorType = 'csv' | 'json'
 
 type QueryDataParams = {
   startYear: number,
   endYear: number,
   startMonth: number,
   endMonth: number,
-  meshCode: string
+  meshCodes: string[]
 }
 
-export type APIResponse = [
+type StaticAPIResponseItem = [
   d: string,
   tm: number | null,
   pr: number | null,
@@ -47,6 +53,23 @@ export type APIResponse = [
   tx: number | null,
   sd: number | null,
 ]
+
+type APIResponseItem = {
+  gridcode: string,
+  year: number,
+  month: number | undefined,
+  day: number | undefined,
+  tm: number | null,
+  pr: number | null,
+  tn: number | null,
+  sr: number | null,
+  tx: number | null,
+  sd: number | null,
+}
+
+export type QueryResponse = {
+  [meshCode: string]: StaticAPIResponseItem[],
+}
 
 type AggregationDeployMap = { [key: string]: {
   tm: { sum: number, count: number },
@@ -105,17 +128,63 @@ export const validateAverageScope = ({average}: AverageScopeParams) => {
   return false
 }
 
-export const queryData = async (query: QueryDataParams): Promise<{data: APIResponse[], meshCode: string }> => {
-  // NOTE: This is a mock.
-  return {data: [
-    ["2015-3-1", 5.3, 2.1, 1.2, 3.7, 1.5, 1.2]
-  ],meshCode: query.meshCode}
+export const validateSeparatorTypes = ({separator}: SeparatorTypesParams) => {
+  if(!separator || separator.toUpperCase() === 'JSON') {
+    return { separatorType: 'json' as 'json' }
+  } else if(separator.toUpperCase() === 'CSV') {
+    return {separatorType: 'csv' as 'csv'}
+  }
+  return false
 }
 
-export const aggregateData = (data: APIResponse[], gridcode: string, averageScope: AverageScope) => {
-  if(averageScope === 'day') {
-    return data
+export const queryData = async (query: QueryDataParams): Promise<QueryResponse> => {
+  // NOTE: This is a mock.
+  const apiResponse: StaticAPIResponseItem[] = [
+    ["2015-3-1", 5.3, 2.1, 1.2, 3.7, 1.5, 1.2]
+  ]
+  return query.meshCodes.reduce<QueryResponse>((prev, meshCode) => {
+    prev[meshCode] = apiResponse
+    return prev
+  }, {})
+}
+
+const getDeployKey = (scope: AverageScope, item: {gridcode: string, year: number, month: number, day: number}) => {
+  if(scope === 'day') {
+    return `${item.gridcode}/${item.year}/${item.month}/${item.day}`
+  } else if(scope === 'month') {
+    return `${item.gridcode}/${item.year}/${item.month}`
   } else {
+    return `${item.gridcode}/${item.year}`
+  }
+}
+
+export const aggregateData = (data: QueryResponse, averageScope: AverageScope, separatorType: SeparatorType) => {
+  const aggregations = Object.keys(data).reduce<APIResponseItem[]>((prev, meshCode) => {
+    const apiResponse = data[meshCode]
+    prev.push(...aggregateEachData(apiResponse, meshCode, averageScope))
+    return prev
+  }, [])
+  if(separatorType === 'csv') {
+    let header = ''
+    let rows = ''
+    if(averageScope === 'year') {
+      header = `gridcode,year,tm,pr,tn,sr,tx,sd`
+      rows = aggregations.map(item => `${item.gridcode},${item.year},${item.tm},${item.pr},${item.tn},${item.sr},${item.tx},${item.sd}`).join('\n')
+    } else if(averageScope === 'month') {
+      header = `gridcode,year,month,tm,pr,tn,sr,tx,sd`
+      rows = aggregations.map(item => `${item.gridcode},${item.year},${item.month},${item.tm},${item.pr},${item.tn},${item.sr},${item.tx},${item.sd}`).join('\n')
+    } else {
+      header = `gridcode,year,month,day,tm,pr,tn,sr,tx,sd`
+      rows = aggregations.map(item => `${item.gridcode},${item.year},${item.month},${item.day},${item.tm},${item.pr},${item.tn},${item.sr},${item.tx},${item.sd}`).join('\n')
+    }
+    return `${header}\n${rows}`
+  } else {
+    return aggregations
+  }
+}
+
+const aggregateEachData = (data: StaticAPIResponseItem[], gridcode: string, averageScope: AverageScope) => {
+
     const deployMap = data.reduce<AggregationDeployMap>((prev, row) => {
       const [dateString, tm, pr, tn, sr, tx, sd] = row
       const [yearString, monthString, dayString] = dateString.split('-')
@@ -129,7 +198,7 @@ export const aggregateData = (data: APIResponse[], gridcode: string, averageScop
         day,
         tm, pr, tn, sr, tx, sd
       }
-      const key = averageScope === 'month' ? `${item.gridcode}/${item.year}/${item.month}` : `${item.gridcode}/${item.year}`
+      const key = getDeployKey(averageScope, item)
       if(!prev[key]) {
         prev[key] = {
           tm: {sum: 0,count: 0},
@@ -168,19 +237,23 @@ export const aggregateData = (data: APIResponse[], gridcode: string, averageScop
     }, {})
 
     return Object.keys(deployMap).map(key => {
-      const [gridcode, year, month] = key.split('/')
+      const [gridcode, yearString, monthString, dayString] = key.split('/')
       const deployment = deployMap[key]
+      const year = parseInt(yearString, 10) // !isNaN
+      const month = averageScope !== 'year' ? parseInt(monthString, 10) : void 0 // !isNaN
+      const day = averageScope === 'day' ? parseInt(dayString, 10): void 0 // !isNaN
       return {
         gridcode,
-        year: parseInt(year, 10), // !isNaN
-        month: averageScope === 'month' ? parseInt(month, 10) : void 0, // !isNaN
-        tm: deployment.tm.count > 0 ? deployment.tm.sum / deployment.tm.count : void 0,
-        pr: deployment.pr.count > 0 ? deployment.pr.sum / deployment.pr.count : void 0,
-        tn: deployment.tn.count > 0 ? deployment.tn.sum / deployment.tn.count : void 0,
-        sr: deployment.sr.count > 0 ? deployment.sr.sum / deployment.sr.count : void 0,
-        tx: deployment.tx.count > 0 ? deployment.tx.sum / deployment.tx.count : void 0,
-        sd: deployment.sd.count > 0 ? deployment.sd.sum / deployment.sd.count : void 0,
+        year,
+        month,
+        day,
+        tm: deployment.tm.count > 0 ? deployment.tm.sum / deployment.tm.count : null,
+        pr: deployment.pr.count > 0 ? deployment.pr.sum / deployment.pr.count : null,
+        tn: deployment.tn.count > 0 ? deployment.tn.sum / deployment.tn.count : null,
+        sr: deployment.sr.count > 0 ? deployment.sr.sum / deployment.sr.count : null,
+        tx: deployment.tx.count > 0 ? deployment.tx.sum / deployment.tx.count : null,
+        sd: deployment.sd.count > 0 ? deployment.sd.sum / deployment.sd.count : null,
       }
     })
   }
-}
+

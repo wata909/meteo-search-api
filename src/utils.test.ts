@@ -2,8 +2,9 @@ import {
   validateAverageScope,
   validateDateRange,
   validateGeographicalRange,
+  validateSeparatorTypes,
   aggregateData,
-  APIResponse,
+  QueryResponse,
 } from './utils'
 
 test('should validate date range', () => {
@@ -48,65 +49,98 @@ test('should not validate average scope', () => {
   expect(result).toEqual(false)
 })
 
+test('should validate separator scope', () => {
+  const result = validateSeparatorTypes({separator: 'csv'})
+  expect(result).toEqual({separatorType: 'csv'})
+})
+
+test('should not validate separator scope', () => {
+  const result = validateSeparatorTypes({separator: 'foo'})
+  expect(result).toEqual(false)
+})
+
 test('should aggregate data by month', () => {
-  const data: APIResponse[] = [
-    ['2001-01-01', 1, 10, null, null, null, null],
-    ['2001-01-02', 2, 12, null, null, null, null],
-    ['2001-01-03', 3, 17, null, null, null, null],
-    ['2001-02-01', 2, 11, null, null, null, null],
-    ['2001-02-02', 3, 14, null, null, null, null],
-    ['2001-02-03', 4, 17, null, null, null, null],
-  ]
-  const result = aggregateData(data, '111', 'month')
+  const data: QueryResponse = {
+    '111': [
+      ['2001-01-01', 1, 10, null, null, null, null],
+      ['2001-01-02', 2, 12, null, null, null, null],
+      ['2001-01-03', 3, 17, null, null, null, null],
+      ['2001-02-01', 2, 11, null, null, null, null],
+      ['2001-02-02', 3, 14, null, null, null, null],
+      ['2001-02-03', 4, 17, null, null, null, null],
+    ]
+  }
+  const result = aggregateData(data, 'month', 'json')
   expect(result).toEqual(
     [
-      { gridcode: '111', year: 2001, month: 1, tm: 2, pr: 13 },
-      { gridcode: '111', year: 2001, month: 2, tm: 3, pr: 14 },
+      { gridcode: '111', year: 2001, month: 1, tm: 2, pr: 13,tn: null,sr: null,tx:null,sd:null  },
+      { gridcode: '111', year: 2001, month: 2, tm: 3, pr: 14,tn: null,sr: null,tx:null,sd:null  },
     ]
   )
 })
 
 test('should aggregate data by year', () => {
-  const data: APIResponse[] = [
-    [ '2001-1-1', 1, 10, null, null, null, null ],
-    [ '2001-1-2', 2, 12, null, null, null, null ],
-    [ '2001-1-3', 3, 17, null, null, null, null ],
-    [ '2002-2-1', 2, 11, null, null, null, null ],
-    [ '2002-2-2', 3, 14, null, null, null, null ],
-    [ '2002-2-3', 4, 17, null, null, null, null ],
-  ]
-  const result = aggregateData(data, '111', 'year')
+  const data: QueryResponse = {
+    '111': [
+      [ '2001-1-1', 1, 10, null, null, null, null ],
+      [ '2001-1-2', 2, 12, null, null, null, null ],
+      [ '2001-1-3', 3, 17, null, null, null, null ],
+      [ '2002-2-1', 2, 11, null, null, null, null ],
+      [ '2002-2-2', 3, 14, null, null, null, null ],
+      [ '2002-2-3', 4, 17, null, null, null, null ],
+    ]
+  }
+  const result = aggregateData(data, 'year', 'json')
   expect(result).toEqual(
     [
-      { gridcode: '111', year: 2001, tm: 2, pr: 13 },
-      { gridcode: '111', year: 2002, tm: 3, pr: 14 },
+      { gridcode: '111', year: 2001, tm: 2, pr: 13,tn: null,sr: null,tx:null,sd:null  },
+      { gridcode: '111', year: 2002, tm: 3, pr: 14,tn: null,sr: null,tx:null,sd:null  },
     ]
   )
 })
 
 test('should aggregate data by gridcode', () => {
-  const data1:APIResponse[] = [
-    ['2001-01-01',1, 10, null, null, null, null],
-    ['2001-01-02',2, 12, null, null, null, null],
-    ['2001-01-03',3, 17, null, null, null, null],
-  ]
+  const data: QueryResponse = {
+    '111': [
+      ['2001-01-01',1, 10, null, null, null, null],
+      ['2001-01-02',2, 12, null, null, null, null],
+      ['2001-01-03',3, 17, null, null, null, null],
+    ],
+    '222': [
+      ['2001-01-01',2, 11, null, null, null, null],
+      ['2001-01-02',3, 14, null, null, null, null],
+      ['2001-01-03',4, 17, null, null, null, null],
+    ]
+  }
 
-  const data2: APIResponse[] = [
-    ['2001-01-01',2, 11, null, null, null, null],
-    ['2001-01-02',3, 14, null, null, null, null],
-    ['2001-01-03',4, 17, null, null, null, null],
-  ]
-
-  const result1 = aggregateData(data1, '111', 'month')
-  const result2 = aggregateData(data2, '222', 'month')
-  expect(result1).toEqual(
+  const result = aggregateData(data, 'month', 'json')
+  expect(result).toEqual(
     [
-      { gridcode: '111', year: 2001, month: 1, tm: 2, pr: 13 },
+      { gridcode: '111', year: 2001, month: 1, tm: 2, pr: 13,tn: null,sr: null,tx:null,sd:null },
+      { gridcode: '222', year: 2001, month: 1, tm: 3, pr: 14,tn: null,sr: null,tx:null,sd:null  },
     ]
   )
-  expect(result2).toEqual(
-    [
-      { gridcode: '222', year: 2001, month: 1, tm: 3, pr: 14 },
+})
+
+test('should aggregate data as csv by gridcode', () => {
+  const data: QueryResponse = {
+    '111': [
+      ['2001-01-01',1, 10, null, null, null, null],
+      ['2001-01-02',2, 12, null, null, null, null],
+      ['2001-01-03',3, 17, null, null, null, null],
+    ],
+    '222': [
+      ['2001-01-01',2, 11, null, null, null, null],
+      ['2001-01-02',3, 14, null, null, null, null],
+      ['2001-01-03',4, 17, null, null, null, null],
     ]
-  )
+  }
+
+  const result = aggregateData(data, 'month', 'csv')
+  const csv = [
+    'gridcode,year,month,tm,pr,tn,sr,tx,sd',
+    '111,2001,1,2,13,null,null,null,null',
+    '222,2001,1,3,14,null,null,null,null',
+  ].join('\n')
+  expect(result).toEqual(csv)
 })

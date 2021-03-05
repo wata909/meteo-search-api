@@ -4,8 +4,9 @@ import {
   validateDateRange,
   validateGeographicalRange,
   validateAverageScope,
+  validateSeparatorTypes,
   aggregateData,
-  queryData
+  queryData,
 } from './utils'
 
 export const handler: Naro.LambdaHandler = async (event, context, callback) => {
@@ -17,6 +18,8 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
     const { mcode } = query
     // average
     const { average } = query
+    // separator
+    const { separator } = query
 
     const dateRange = validateDateRange({sy, ey, sm, em})
     if(!dateRange) {
@@ -33,24 +36,28 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
       return callback(null, errorResponse(400, 'Invalid average.'))
     }
 
+    const validatedSeparatorTypes = validateSeparatorTypes({separator})
+    if(!validatedSeparatorTypes) {
+      return callback(null, errorResponse(400, 'Invalid separator.'))
+    }
+
     const {startYear, endYear, startMonth, endMonth} = dateRange
     const {meshCodes} = geographicalRange
     const {averageScope} = validatedAverageScope
+    const {separatorType} = validatedSeparatorTypes
 
-    const aggregations = await Promise.all(
-      meshCodes
-        .map(
-          meshCode => queryData({startYear, endYear, startMonth, endMonth, meshCode})
-            .then(({data, meshCode}) => aggregateData(data, meshCode, averageScope))
-        )
-    )
+    const meshItemMap = await queryData({startYear, endYear, startMonth, endMonth, meshCodes})
+    const aggregations = aggregateData(meshItemMap, averageScope, separatorType)
+
+    const contentType = separatorType === 'csv' ? 'text/csv' : 'application/json'
+    const body = separatorType === 'csv' ? aggregations as string : JSON.stringify(aggregations)
 
     return callback(null, {
       statusCode: 200,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': contentType, // TODO: Lambda Proxy で制御できたか？
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify(aggregations)
+      body
     });
 }
