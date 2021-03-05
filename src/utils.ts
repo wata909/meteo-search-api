@@ -43,12 +43,12 @@ type APIResponse = {
   year: number,
   month: number,
   day: number,
-  tm?: number,
-  pr?: number,
-  tn?: number,
-  sr?: number,
-  tx?: number,
-  sd?: number,
+  tm: number | null,
+  pr: number | null,
+  tn: number | null,
+  sr: number | null,
+  tx: number | null,
+  sd: number | null,
 }
 type AggregationDeployMap = { [key: string]: {
   tm: { sum: number, count: number },
