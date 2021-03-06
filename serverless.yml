@@ -23,9 +23,11 @@ package:
     - bin/
     - docs/
     - src/
+    - eslintrc.js
     - package.json
     - README.md
     - serverless.yml
+    - tsconfig.eslint.json
     - tsconfig.json
     - yarn.lock
     - package-lock.json

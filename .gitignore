@@ -125,3 +125,6 @@ package-lock.json
 
 # Mac
 .DS_Store
+
+# project specific
+/data
