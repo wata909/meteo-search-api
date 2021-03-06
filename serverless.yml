@@ -25,10 +25,12 @@ package:
     - src/
     - eslintrc.js
     - package.json
+    - prettierrc
     - README.md
     - serverless.yml
     - tsconfig.eslint.json
     - tsconfig.json
+    - "*.log"
     - yarn.lock
     - package-lock.json
 
