@@ -1,16 +1,24 @@
-import { Naro } from ".";
+import AWSLamnbda from "aws-lambda";
+
+type LambdaHandler = (
+  event: AWSLamnbda.APIGatewayProxyEvent,
+  context: AWSLamnbda.Context,
+  callback: AWSLamnbda.APIGatewayProxyCallback
+) => void;
+
+import { errorResponse } from "./utils/format";
+import { queryData } from "./utils/api";
+import { aggregateData } from "./utils/aggregation";
+
 import {
-  errorResponse,
   validateDateRange,
   validateGeographicalRange,
   validateElementScope,
   validateAverageScope,
   validateSeparatorTypes,
-  aggregateData,
-  queryData,
-} from "./utils";
+} from "./utils/validation";
 
-export const handler: Naro.LambdaHandler = async (event, context, callback) => {
+export const handler: LambdaHandler = async (event, _1, callback) => {
   const query = event.queryStringParameters || {};
   // date range
   const { sy, ey, sm, em } = query;
@@ -54,18 +62,19 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
   const { averageScope } = validatedAverageScope;
   const { separatorType } = validatedSeparatorTypes;
 
-  const meshItemMap = await queryData({
+  const queryResponse = await queryData({
     startYear,
     endYear,
     startMonth,
     endMonth,
     meshCodes,
   });
-  const aggregations = aggregateData(
-    meshItemMap,
+  const aggregations = aggregateData({
+    queryResponse,
+    // elementScope,
     averageScope,
-    separatorType
-  );
+    separatorType,
+  });
 
   const contentType = separatorType === "csv" ? "text/csv" : "application/json";
   const body =
