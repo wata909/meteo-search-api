@@ -2,6 +2,7 @@ import {
   validateAverageScope,
   validateDateRange,
   validateGeographicalRange,
+  validateElementScope,
   validateSeparatorTypes,
   aggregateData,
   QueryResponse,
@@ -53,6 +54,18 @@ test("should validate average scope", () => {
   const result = validateAverageScope({ average: "month" });
   expect(result).toEqual({ averageScope: "month" });
 });
+
+test('should validate element scope', () => {
+  const result = validateElementScope({ element: 'tm,pr,tn' })
+  expect(result).toEqual({elementScope: {
+    tm: true,
+    pr: true,
+    tn: true,
+    sr: false,
+    tx: false,
+    sd: false,
+  }})
+})
 
 test("should not validate average scope", () => {
   const result = validateAverageScope({ average: "bbbbb" });

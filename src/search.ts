@@ -50,7 +50,7 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
 
   const { startYear, endYear, startMonth, endMonth } = dateRange;
   const { meshCodes } = geographicalRange;
-  const { elementTypes } = validatedElementScope;
+  const { elementScope } = validatedElementScope;
   const { averageScope } = validatedAverageScope;
   const { separatorType } = validatedSeparatorTypes;
 
@@ -63,7 +63,6 @@ export const handler: Naro.LambdaHandler = async (event, context, callback) => {
   });
   const aggregations = aggregateData(
     meshItemMap,
-    elementTypes,
     averageScope,
     separatorType
   );

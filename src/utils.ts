@@ -41,10 +41,15 @@ type SeparatorTypesParams = {
 };
 
 type ElementType = "tm" | "pr" | "tn" | "sr" | "tx" | "sd";
+const allElementTypes: ElementType[] = ["tm", "pr", "tn", "sr", "tx", "sd"];
 
 type AverageScope = "day" | "month" | "year";
 
 type SeparatorType = "csv" | "json";
+
+type ElementScope = {
+  [element in ElementType]?: boolean;
+};
 
 type QueryDataParams = {
   startYear: number;
@@ -130,12 +135,25 @@ export const validateGeographicalRange = ({ mcode }: GeographicalParams) => {
 };
 
 export const validateElementScope = ({ element }: ElementScopeParams) => {
+  let allowedElementTypes: ElementType[]
   if (!element || element.toUpperCase() === "ALL") {
-    return ["tm", "pr", "tn", "sr", "tx", "sd"] as ElementType[];
+    allowedElementTypes = allElementTypes
+  } else {
+    allowedElementTypes = element.split(",").filter((element, index, self) => {
+      return self.indexOf(element) === index && allElementTypes.includes(element as ElementType);
+    }) as ElementType[];
   }
-  const elementTypes = element.split(",").filter((element, index, self) => {
-    return self.indexOf(element) === index;
-  });
+
+  if(allowedElementTypes.length === 0) {
+    return false
+  }
+
+  const elementScope = allElementTypes.reduce<ElementScope>((prev, element) => {
+    prev[element] = allowedElementTypes.includes(element)
+    return prev
+  }, {})
+
+  return { elementScope }
 };
 
 export const validateAverageScope = ({ average }: AverageScopeParams) => {
