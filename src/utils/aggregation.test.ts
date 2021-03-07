@@ -14,6 +14,7 @@ test("should aggregate data by month", () => {
   };
   const result = aggregateData({
     queryResponse,
+    elementScope: { tm: true, pr: true },
     averageScope: "month",
     separatorType: "json",
   });
@@ -24,10 +25,6 @@ test("should aggregate data by month", () => {
       month: 1,
       tm: 2,
       pr: 13,
-      tn: null,
-      sr: null,
-      tx: null,
-      sd: null,
     },
     {
       gridcode: "111",
@@ -35,10 +32,6 @@ test("should aggregate data by month", () => {
       month: 2,
       tm: 3,
       pr: 14,
-      tn: null,
-      sr: null,
-      tx: null,
-      sd: null,
     },
   ]);
 });
@@ -56,6 +49,7 @@ test("should aggregate data by year", () => {
   };
   const result = aggregateData({
     queryResponse,
+    elementScope: { tm: true, pr: true },
     averageScope: "year",
     separatorType: "json",
   });
@@ -65,20 +59,12 @@ test("should aggregate data by year", () => {
       year: 2001,
       tm: 2,
       pr: 13,
-      tn: null,
-      sr: null,
-      tx: null,
-      sd: null,
     },
     {
       gridcode: "111",
       year: 2002,
       tm: 3,
       pr: 14,
-      tn: null,
-      sr: null,
-      tx: null,
-      sd: null,
     },
   ]);
 });
@@ -99,6 +85,7 @@ test("should aggregate data by gridcode", () => {
 
   const result = aggregateData({
     queryResponse,
+    elementScope: { tm: true, pr: true },
     averageScope: "month",
     separatorType: "json",
   });
@@ -109,10 +96,6 @@ test("should aggregate data by gridcode", () => {
       month: 1,
       tm: 2,
       pr: 13,
-      tn: null,
-      sr: null,
-      tx: null,
-      sd: null,
     },
     {
       gridcode: "222",
@@ -120,10 +103,6 @@ test("should aggregate data by gridcode", () => {
       month: 1,
       tm: 3,
       pr: 14,
-      tn: null,
-      sr: null,
-      tx: null,
-      sd: null,
     },
   ]);
 });
@@ -144,13 +123,14 @@ test("should aggregate data as csv by gridcode", () => {
 
   const result = aggregateData({
     queryResponse,
+    elementScope: { tm: true, pr: true },
     averageScope: "month",
     separatorType: "csv",
   });
   const csv = [
-    "gridcode,year,month,tm,pr,tn,sr,tx,sd",
-    "111,2001,1,2,13,null,null,null,null",
-    "222,2001,1,3,14,null,null,null,null",
+    "gridcode,year,month,tm,pr",
+    "111,2001,1,2,13",
+    "222,2001,1,3,14",
   ].join("\n");
   expect(result).toEqual(csv);
 });

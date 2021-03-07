@@ -21,23 +21,14 @@ type SeparatorTypesParams = {
   separator: string | undefined;
 };
 
-type ElementType = "tm" | "pr" | "tn" | "sr" | "tx" | "sd";
-const allElementTypes: ElementType[] = ["tm", "pr", "tn", "sr", "tx", "sd"];
+export type ElementType = "tm" | "pr" | "tn" | "sr" | "tx" | "sd";
 
 export type AverageScope = "day" | "month" | "year";
 
 export type SeparatorType = "csv" | "json";
 
-type ElementScope = {
+export type ElementScope = {
   [element in ElementType]?: boolean;
-};
-
-type QueryDataParams = {
-  startYear: number;
-  endYear: number;
-  startMonth: number;
-  endMonth: number;
-  meshCodes: string[];
 };
 
 type StaticAPIResponseItem = [
@@ -53,6 +44,15 @@ type StaticAPIResponseItem = [
 export type QueryResponse = {
   [meshCode: string]: StaticAPIResponseItem[];
 };
+
+export const allElementTypes: ElementType[] = [
+  "tm",
+  "pr",
+  "tn",
+  "sr",
+  "tx",
+  "sd",
+];
 
 export const validateDateRange = ({ sy, ey, sm, em }: DateParams) => {
   if (!sy || !ey || !sm || !em) {

@@ -71,7 +71,7 @@ export const handler: LambdaHandler = async (event, _1, callback) => {
   });
   const aggregations = aggregateData({
     queryResponse,
-    // elementScope,
+    elementScope,
     averageScope,
     separatorType,
   });

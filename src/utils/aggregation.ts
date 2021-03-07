@@ -1,17 +1,18 @@
-import { AverageScope, SeparatorType } from "./validation";
+import { Parser } from "json2csv";
+import { ElementScope, AverageScope, SeparatorType } from "./validation";
 import { QueryResponse } from "./api";
 
 type APIResponseItem = {
   gridcode: string;
   year: number;
-  month: number | undefined;
-  day: number | undefined;
-  tm: number | null;
-  pr: number | null;
-  tn: number | null;
-  sr: number | null;
-  tx: number | null;
-  sd: number | null;
+  month?: number;
+  day?: number;
+  tm?: number;
+  pr?: number;
+  tn?: number;
+  sr?: number;
+  tx?: number;
+  sd?: number;
 };
 
 type AggregationDeployMap = {
@@ -25,7 +26,7 @@ type AggregationDeployMap = {
   };
 };
 
-const getDeployKey = (
+const getAggregationKey = (
   scope: AverageScope,
   item: { gridcode: string; year: number; month: number; day: number }
 ) => {
@@ -40,50 +41,37 @@ const getDeployKey = (
 
 export const aggregateData = ({
   queryResponse,
+  elementScope,
   averageScope,
   separatorType,
 }: {
   queryResponse: QueryResponse;
+  elementScope: ElementScope;
   averageScope: AverageScope;
   separatorType: SeparatorType;
 }) => {
   const aggregations = Object.keys(queryResponse).reduce<APIResponseItem[]>(
     (prev, meshCode) => {
       const apiResponse = queryResponse[meshCode];
-      prev.push(...aggregateEachData(apiResponse, meshCode, averageScope));
+      prev.push(
+        ...aggregateEachData(apiResponse, meshCode, elementScope, averageScope)
+      );
       return prev;
     },
     []
   );
+
   if (separatorType === "csv") {
-    let header = "";
-    let rows = "";
-    if (averageScope === "year") {
-      header = `gridcode,year,tm,pr,tn,sr,tx,sd`;
-      rows = aggregations
-        .map(
-          (item) =>
-            `${item.gridcode},${item.year},${item.tm},${item.pr},${item.tn},${item.sr},${item.tx},${item.sd}`
-        )
-        .join("\n");
-    } else if (averageScope === "month") {
-      header = `gridcode,year,month,tm,pr,tn,sr,tx,sd`;
-      rows = aggregations
-        .map(
-          (item) =>
-            `${item.gridcode},${item.year},${item.month},${item.tm},${item.pr},${item.tn},${item.sr},${item.tx},${item.sd}`
-        )
-        .join("\n");
-    } else {
-      header = `gridcode,year,month,day,tm,pr,tn,sr,tx,sd`;
-      rows = aggregations
-        .map(
-          (item) =>
-            `${item.gridcode},${item.year},${item.month},${item.day},${item.tm},${item.pr},${item.tn},${item.sr},${item.tx},${item.sd}`
-        )
-        .join("\n");
-    }
-    return `${header}\n${rows}`;
+    const csvParser = new Parser({ quote: "" });
+    const aggregationsWitoutUndefinedProperties = aggregations.map(
+      (aggregation) => {
+        (Object.keys(aggregation) as (keyof APIResponseItem)[]).forEach(
+          (key) => aggregation[key] === void 0 && delete aggregation[key]
+        );
+        return aggregation;
+      }
+    );
+    return csvParser.parse(aggregationsWitoutUndefinedProperties);
   } else {
     return aggregations;
   }
@@ -92,8 +80,9 @@ export const aggregateData = ({
 const aggregateEachData = (
   data: QueryResponse[string],
   gridcode: string,
+  elementScope: ElementScope,
   averageScope: AverageScope
-) => {
+): APIResponseItem[] => {
   const deployMap = data.reduce<AggregationDeployMap>((prev, row) => {
     const [dateString, tm, pr, tn, sr, tx, sd] = row;
     const [yearString, monthString, dayString] = dateString.split("-");
@@ -105,14 +94,15 @@ const aggregateEachData = (
       year,
       month,
       day,
-      tm,
-      pr,
-      tn,
-      sr,
-      tx,
-      sd,
+      // filter elements
+      tm: elementScope.tm ? tm : null,
+      pr: elementScope.tm ? pr : null,
+      tn: elementScope.tm ? tn : null,
+      sr: elementScope.tm ? sr : null,
+      tx: elementScope.tm ? tx : null,
+      sd: elementScope.tm ? sd : null,
     };
-    const key = getDeployKey(averageScope, item);
+    const key = getAggregationKey(averageScope, item);
     if (!prev[key]) {
       prev[key] = {
         tm: { sum: 0, count: 0 },
@@ -164,27 +154,27 @@ const aggregateEachData = (
       tm:
         deployment.tm.count > 0
           ? deployment.tm.sum / deployment.tm.count
-          : null,
+          : void 0,
       pr:
         deployment.pr.count > 0
           ? deployment.pr.sum / deployment.pr.count
-          : null,
+          : void 0,
       tn:
         deployment.tn.count > 0
           ? deployment.tn.sum / deployment.tn.count
-          : null,
+          : void 0,
       sr:
         deployment.sr.count > 0
           ? deployment.sr.sum / deployment.sr.count
-          : null,
+          : void 0,
       tx:
         deployment.tx.count > 0
           ? deployment.tx.sum / deployment.tx.count
-          : null,
+          : void 0,
       sd:
         deployment.sd.count > 0
           ? deployment.sd.sum / deployment.sd.count
-          : null,
+          : void 0,
     };
   });
 };
