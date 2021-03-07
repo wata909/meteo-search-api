@@ -1,6 +1,41 @@
 import { QueryResponse } from "./api";
 import { aggregateData } from "./aggregation";
 
+test("should filter by element", () => {
+  const queryResponse: QueryResponse = {
+    "111": [
+      ["2001-01-01", 1, null, 10, null, null, null],
+      ["2001-01-02", 2, null, 12, null, null, null],
+      ["2001-01-03", 3, null, 17, null, null, null],
+      ["2001-02-01", 2, null, 11, null, null, null],
+      ["2001-02-02", 3, null, 14, null, null, null],
+      ["2001-02-03", 4, null, 17, null, null, null],
+    ],
+  };
+  const result = aggregateData({
+    queryResponse,
+    elementScope: { tm: true, pr: false, tn: true },
+    averageScope: "month",
+    separatorType: "json",
+  });
+  expect(result).toEqual([
+    {
+      gridcode: "111",
+      year: 2001,
+      month: 1,
+      tm: 2,
+      tn: 13,
+    },
+    {
+      gridcode: "111",
+      year: 2001,
+      month: 2,
+      tm: 3,
+      tn: 14,
+    },
+  ]);
+});
+
 test("should aggregate data by month", () => {
   const queryResponse: QueryResponse = {
     "111": [
