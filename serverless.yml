@@ -14,7 +14,7 @@ provider:
     shouldStartNameWithService: true
   endpointType: REGIONAL
   environment:
-    FOO: BAR
+    NARO_AGROENV_STATIC_API_ENDPOINT: ${env:NARO_AGROENV_STATIC_API_ENDPOINT}
 
 package:
   exclude:

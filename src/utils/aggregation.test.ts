@@ -3,14 +3,16 @@ import { aggregateData } from "./aggregation";
 
 test("should filter by element", () => {
   const queryResponse: QueryResponse = {
-    "111": [
-      ["2001-01-01", 1, null, 10, null, null, null],
-      ["2001-01-02", 2, null, 12, null, null, null],
-      ["2001-01-03", 3, null, 17, null, null, null],
-      ["2001-02-01", 2, null, 11, null, null, null],
-      ["2001-02-02", 3, null, 14, null, null, null],
-      ["2001-02-03", 4, null, 17, null, null, null],
-    ],
+    "111": {
+      2001: [
+        ["01-01", 1, null, 10, null, null, null],
+        ["01-02", 2, null, 12, null, null, null],
+        ["01-03", 3, null, 17, null, null, null],
+        ["02-01", 2, null, 11, null, null, null],
+        ["02-02", 3, null, 14, null, null, null],
+        ["02-03", 4, null, 17, null, null, null],
+      ],
+    },
   };
   const result = aggregateData({
     queryResponse,
@@ -38,14 +40,16 @@ test("should filter by element", () => {
 
 test("should aggregate data by month", () => {
   const queryResponse: QueryResponse = {
-    "111": [
-      ["2001-01-01", 1, 10, null, null, null, null],
-      ["2001-01-02", 2, 12, null, null, null, null],
-      ["2001-01-03", 3, 17, null, null, null, null],
-      ["2001-02-01", 2, 11, null, null, null, null],
-      ["2001-02-02", 3, 14, null, null, null, null],
-      ["2001-02-03", 4, 17, null, null, null, null],
-    ],
+    "111": {
+      2001: [
+        ["01-01", 1, 10, null, null, null, null],
+        ["01-02", 2, 12, null, null, null, null],
+        ["01-03", 3, 17, null, null, null, null],
+        ["02-01", 2, 11, null, null, null, null],
+        ["02-02", 3, 14, null, null, null, null],
+        ["02-03", 4, 17, null, null, null, null],
+      ],
+    },
   };
   const result = aggregateData({
     queryResponse,
@@ -73,14 +77,18 @@ test("should aggregate data by month", () => {
 
 test("should aggregate data by year", () => {
   const queryResponse: QueryResponse = {
-    "111": [
-      ["2001-1-1", 1, 10, null, null, null, null],
-      ["2001-1-2", 2, 12, null, null, null, null],
-      ["2001-1-3", 3, 17, null, null, null, null],
-      ["2002-2-1", 2, 11, null, null, null, null],
-      ["2002-2-2", 3, 14, null, null, null, null],
-      ["2002-2-3", 4, 17, null, null, null, null],
-    ],
+    "111": {
+      2001: [
+        ["1-1", 1, 10, null, null, null, null],
+        ["1-2", 2, 12, null, null, null, null],
+        ["1-3", 3, 17, null, null, null, null],
+      ],
+      2002: [
+        ["2-1", 2, 11, null, null, null, null],
+        ["2-2", 3, 14, null, null, null, null],
+        ["2-3", 4, 17, null, null, null, null],
+      ],
+    },
   };
   const result = aggregateData({
     queryResponse,
@@ -106,16 +114,20 @@ test("should aggregate data by year", () => {
 
 test("should aggregate data by gridcode", () => {
   const queryResponse: QueryResponse = {
-    "111": [
-      ["2001-01-01", 1, 10, null, null, null, null],
-      ["2001-01-02", 2, 12, null, null, null, null],
-      ["2001-01-03", 3, 17, null, null, null, null],
-    ],
-    "222": [
-      ["2001-01-01", 2, 11, null, null, null, null],
-      ["2001-01-02", 3, 14, null, null, null, null],
-      ["2001-01-03", 4, 17, null, null, null, null],
-    ],
+    "111": {
+      2001: [
+        ["01-01", 1, 10, null, null, null, null],
+        ["01-02", 2, 12, null, null, null, null],
+        ["01-03", 3, 17, null, null, null, null],
+      ],
+    },
+    "222": {
+      2001: [
+        ["01-01", 2, 11, null, null, null, null],
+        ["01-02", 3, 14, null, null, null, null],
+        ["01-03", 4, 17, null, null, null, null],
+      ],
+    },
   };
 
   const result = aggregateData({
@@ -144,16 +156,20 @@ test("should aggregate data by gridcode", () => {
 
 test("should aggregate data as csv by gridcode", () => {
   const queryResponse: QueryResponse = {
-    "111": [
-      ["2001-01-01", 1, 10, null, null, null, null],
-      ["2001-01-02", 2, 12, null, null, null, null],
-      ["2001-01-03", 3, 17, null, null, null, null],
-    ],
-    "222": [
-      ["2001-01-01", 2, 11, null, null, null, null],
-      ["2001-01-02", 3, 14, null, null, null, null],
-      ["2001-01-03", 4, 17, null, null, null, null],
-    ],
+    "111": {
+      "2001": [
+        ["01-01", 1, 10, null, null, null, null],
+        ["01-02", 2, 12, null, null, null, null],
+        ["01-03", 3, 17, null, null, null, null],
+      ],
+    },
+    "222": {
+      2001: [
+        ["01-01", 2, 11, null, null, null, null],
+        ["01-02", 3, 14, null, null, null, null],
+        ["01-03", 4, 17, null, null, null, null],
+      ],
+    },
   };
 
   const result = aggregateData({

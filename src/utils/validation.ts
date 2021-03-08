@@ -85,7 +85,7 @@ export const validateGeographicalRange = ({ mcode }: GeographicalParams) => {
     return false;
   }
   const meshCodes = mcode.split(",");
-  if (meshCodes.some((meshCode) => !meshCode.match(/([0-9]{7})+/))) {
+  if (meshCodes.some((meshCode) => !meshCode.match(/^[0-9]{8}$/))) {
     return false;
   }
   return { meshCodes };

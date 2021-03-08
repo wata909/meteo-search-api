@@ -49,13 +49,23 @@ export const aggregateData = ({
   elementScope: ElementScope;
   averageScope: AverageScope;
   separatorType: SeparatorType;
-}) => {
+}): string | APIResponseItem[] => {
   const aggregations = Object.keys(queryResponse).reduce<APIResponseItem[]>(
     (prev, meshCode) => {
-      const apiResponse = queryResponse[meshCode];
-      prev.push(
-        ...aggregateEachData(apiResponse, meshCode, elementScope, averageScope)
-      );
+      const years = Object.keys(queryResponse[meshCode]);
+      years.forEach((yearString) => {
+        const year = parseInt(yearString, 10); // !isNaN
+        const apiResponse = queryResponse[meshCode][year];
+        prev.push(
+          ...aggregateEachData(
+            year,
+            apiResponse,
+            meshCode,
+            elementScope,
+            averageScope
+          )
+        );
+      });
       return prev;
     },
     []
@@ -78,15 +88,15 @@ export const aggregateData = ({
 };
 
 const aggregateEachData = (
-  data: QueryResponse[string],
+  year: number,
+  data: QueryResponse[string][number],
   gridcode: string,
   elementScope: ElementScope,
   averageScope: AverageScope
 ): APIResponseItem[] => {
   const deployMap = data.reduce<AggregationDeployMap>((prev, row) => {
     const [dateString, tm, pr, tn, sr, tx, sd] = row;
-    const [yearString, monthString, dayString] = dateString.split("-");
-    const year = parseInt(yearString, 10);
+    const [monthString, dayString] = dateString.split("-");
     const month = parseInt(monthString, 10);
     const day = parseInt(dayString, 10);
     const item = {

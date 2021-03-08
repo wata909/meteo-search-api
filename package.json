@@ -22,7 +22,7 @@
   },
   "peerDependencies": {},
   "scripts": {
-    "test": "jest",
+    "test": "NARO_AGROENV_STATIC_API_ENDPOINT='https://example.com/%s/%s/%s/%s.json' jest",
     "lint": "eslint ./src/* -c ./eslintrc.js && npm run build && npx prettier ./src/*  --write",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && sls offline",
