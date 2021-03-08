@@ -1,3 +1,5 @@
+import { StaticAPIResponseItem } from "./api";
+
 type DateParams = {
   sy?: string;
   ey?: string;
@@ -6,19 +8,19 @@ type DateParams = {
 };
 
 type GeographicalParams = {
-  mcode: string | undefined;
+  mcode?: string;
 };
 
 type ElementScopeParams = {
-  element: string | undefined;
+  element?: string;
 };
 
 type AverageScopeParams = {
-  average: string | undefined;
+  average?: string;
 };
 
 type SeparatorTypesParams = {
-  separator: string | undefined;
+  separator?: string;
 };
 
 export type ElementType = "tm" | "pr" | "tn" | "sr" | "tx" | "sd";
@@ -30,16 +32,6 @@ export type SeparatorType = "csv" | "json";
 export type ElementScope = {
   [element in ElementType]?: boolean;
 };
-
-type StaticAPIResponseItem = [
-  d: string,
-  tm: number | null,
-  pr: number | null,
-  tn: number | null,
-  sr: number | null,
-  tx: number | null,
-  sd: number | null
-];
 
 export type QueryResponse = {
   [meshCode: string]: StaticAPIResponseItem[];
@@ -54,7 +46,16 @@ export const allElementTypes: ElementType[] = [
   "sd",
 ];
 
-export const validateDateRange = (dateParam: DateParams) => {
+export const validateDateRange = (
+  dateParam: DateParams
+):
+  | false
+  | {
+      startYear: number;
+      endYear: number;
+      startMonth: number;
+      endMonth: number;
+    } => {
   const { sy, ey, sm, em } = {
     ey: dateParam.sy,
     sm: "1",
@@ -86,7 +87,9 @@ export const validateDateRange = (dateParam: DateParams) => {
   return { startYear, endYear, startMonth, endMonth };
 };
 
-export const validateGeographicalRange = ({ mcode }: GeographicalParams) => {
+export const validateGeographicalRange = ({
+  mcode,
+}: GeographicalParams): false | { meshCodes: string[] } => {
   if (!mcode || typeof mcode !== "string") {
     return false;
   }

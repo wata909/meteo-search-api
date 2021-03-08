@@ -8,12 +8,14 @@ const dummyPerYearPerMcode = [
   ["5-3", 5.3, 2.1, 1.2, 3.7, 1.5, 1.2],
 ];
 
-const mockFetch = (_0: string) => {
+const mockFetch = (url: string) => {
   return new Promise<{
+    url: string;
     ok: boolean;
     json: () => Promise<(string | number)[][]>;
   }>((resolve) => {
     resolve({
+      url,
       ok: true,
       json: () =>
         new Promise((resolve) => {
