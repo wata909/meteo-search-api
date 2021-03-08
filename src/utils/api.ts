@@ -28,7 +28,7 @@ export type QueryResponse = {
 };
 
 // DI container
-export const _queryData = (fetch: Fetch) => async (
+export const _queryData = (fetch: Fetch, endpointFormat?: string) => async (
   query: QueryDataParams
 ): Promise<QueryResponse> => {
   const { startYear, endYear, startMonth, endMonth, meshCodes } = query;
@@ -36,7 +36,7 @@ export const _queryData = (fetch: Fetch) => async (
 
   const urlMeshCodeList = listCombinations(years, meshCodes)
     .map(({ year, meshCode }) => {
-      const url = formatURL(year, meshCode);
+      const url = formatURL(year, meshCode, endpointFormat);
       if (!url) {
         return false;
       } else {

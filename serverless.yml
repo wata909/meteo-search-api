@@ -20,7 +20,7 @@ package:
   exclude:
     - __tests__
     - .*
-    - bin/
+    - dist/lib
     - docs/
     - src/
     - eslintrc.js
@@ -33,6 +33,7 @@ package:
     - "*.log"
     - yarn.lock
     - package-lock.json
+    - webpcak.config.js
 
 functions:
   search:

@@ -17,6 +17,12 @@ $ npm test
 $ npm start
 ```
 
+### build js library
+
+```shell
+$ npm run build:lib
+```
+
 ## deploy
 
 ```shell
