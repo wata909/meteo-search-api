@@ -1,6 +1,5 @@
 declare namespace NodeJS {
   interface ProcessEnv {
-    readonly FOO: string;
-    readonly BAR: string;
+    readonly NARO_AGROENV_STATIC_API_ENDPOINT: string;
   }
 }
