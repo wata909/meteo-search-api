@@ -1,8 +1,8 @@
 type DateParams = {
-  sy: string | undefined;
-  ey: string | undefined;
-  sm: string | undefined;
-  em: string | undefined;
+  sy?: string;
+  ey?: string;
+  sm?: string;
+  em?: string;
 };
 
 type GeographicalParams = {
@@ -54,7 +54,13 @@ export const allElementTypes: ElementType[] = [
   "sd",
 ];
 
-export const validateDateRange = ({ sy, ey, sm, em }: DateParams) => {
+export const validateDateRange = (dateParam: DateParams) => {
+  const { sy, ey, sm, em } = {
+    ey: dateParam.sy,
+    sm: "1",
+    em: "12",
+    ...dateParam,
+  };
   if (!sy || !ey || !sm || !em) {
     return false;
   }
