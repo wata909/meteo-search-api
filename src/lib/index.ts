@@ -16,7 +16,7 @@ const queryAgroEnvData = (option: any) => {
   const sm =
     option.startMonth === void 0 ? void 0 : option.startMonth.toString(10);
   const em = option.endMonth === void 0 ? void 0 : option.endMonth.toString(10);
-  const mcode = option.meshCodes.join(",");
+  const mcode = option.gridcodes.join(",");
 
   const dateRange = validateDateRange({ sy, ey, sm, em });
   const geographicalRange = validateGeographicalRange({ mcode });
@@ -28,11 +28,11 @@ const queryAgroEnvData = (option: any) => {
     throw new Error(`Invalid geographical Range, ${JSON.stringify(option)}`);
   }
 
-  const urlFormat =
-    option.urlFormat || process.env.NARO_AGROENV_STATIC_API_ENDPOINT;
+  const endpointFormat =
+    option.endpointFormat || process.env.NARO_AGROENV_STATIC_API_ENDPOINT;
   return _queryData(
     (window.fetch as unknown) as Fetch,
-    urlFormat
+    endpointFormat
   )({ ...dateRange, ...geographicalRange });
 };
 
