@@ -156,7 +156,9 @@ describe("geographical range", () => {
   });
 
   test("should not validate if invalid code contaminated", () => {
-    const result = validateGeographicalRange({ mcode: "60417050,hello,12345678" });
+    const result = validateGeographicalRange({
+      mcode: "60417050,hello,12345678",
+    });
     expect(result).toEqual(false);
   });
 
@@ -198,32 +200,14 @@ describe("element scope", () => {
     });
   });
 
-  test("should validate empty element as default", () => {
+  test("should not validate empty element as default", () => {
     const result = validateElementScope({ element: void 0 });
-    expect(result).toEqual({
-      elementScope: {
-        tm: true,
-        pr: true,
-        tn: true,
-        sr: true,
-        tx: true,
-        sd: true,
-      },
-    });
+    expect(result).toEqual(false);
   });
 
   test("should not validate invalid elements", () => {
     const result = validateElementScope({ element: "tm,pr,hoge,sr,fuga,sd" });
-    expect(result).toEqual({
-      elementScope: {
-        tm: true,
-        pr: true,
-        tn: false,
-        sr: true,
-        tx: false,
-        sd: true,
-      },
-    });
+    expect(result).toEqual(false);
   });
 
   test("should not validate only with invalid elements", () => {

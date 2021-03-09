@@ -102,15 +102,22 @@ export const validateGeographicalRange = ({
 
 export const validateElementScope = ({ element }: ElementScopeParams) => {
   let allowedElementTypes: ElementType[];
-  if (!element || element.toUpperCase() === "ALL") {
-    allowedElementTypes = allElementTypes;
+  if (!element) {
+    return false;
   } else {
-    allowedElementTypes = element.split(",").filter((element, index, self) => {
-      return (
-        self.indexOf(element) === index &&
-        allElementTypes.includes(element as ElementType)
-      );
-    }) as ElementType[];
+    const elements = element.split(",").filter((element, index, self) => {
+      return self.indexOf(element) === index;
+    });
+
+    if (
+      elements.some(
+        (element) => !allElementTypes.includes(element as ElementType)
+      )
+    ) {
+      return false;
+    }
+
+    allowedElementTypes = elements as ElementType[];
   }
 
   if (allowedElementTypes.length === 0) {

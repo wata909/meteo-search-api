@@ -20,6 +20,20 @@ import {
 
 export const handler: LambdaHandler = async (event, _1, callback) => {
   const query = event.queryStringParameters || {};
+
+  // backward compatibility
+  const { pcode, rcode, mtype, callback: jsonpcallback } = query;
+
+  if (pcode) {
+    return callback(null, errorResponse(400, "Invalid pcode parameter."));
+  } else if (rcode) {
+    return callback(null, errorResponse(400, "Invalid rcode parameter."));
+  } else if (mtype !== "me") {
+    return callback(null, errorResponse(400, "Invalid mtype parameter."));
+  } else if (jsonpcallback) {
+    return callback(null, errorResponse(400, "Invalid callback parameter."));
+  }
+
   // date range
   const { sy, ey, sm, em } = query;
   // geographical range
@@ -33,27 +47,30 @@ export const handler: LambdaHandler = async (event, _1, callback) => {
 
   const dateRange = validateDateRange({ sy, ey, sm, em });
   if (!dateRange) {
-    return callback(null, errorResponse(400, "Invalid date range."));
+    return callback(
+      null,
+      errorResponse(400, "Invalid sy, ey, sm or em paramters.")
+    );
   }
 
   const geographicalRange = validateGeographicalRange({ mcode });
   if (!geographicalRange) {
-    return callback(null, errorResponse(400, "Invalid mesh code."));
+    return callback(null, errorResponse(400, "Invalid mcode paramter."));
   }
 
   const validatedElementScope = validateElementScope({ element });
   if (!validatedElementScope) {
-    return callback(null, errorResponse(400, "Invalid element."));
+    return callback(null, errorResponse(400, "Invalid element parameter."));
   }
 
   const validatedAverageScope = validateAverageScope({ average });
   if (!validatedAverageScope) {
-    return callback(null, errorResponse(400, "Invalid average."));
+    return callback(null, errorResponse(400, "Invalid average paramter."));
   }
 
   const validatedSeparatorTypes = validateSeparatorTypes({ separator });
   if (!validatedSeparatorTypes) {
-    return callback(null, errorResponse(400, "Invalid separator."));
+    return callback(null, errorResponse(400, "Invalid separator paramter."));
   }
 
   const { startYear, endYear, startMonth, endMonth } = dateRange;
