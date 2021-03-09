@@ -72,9 +72,12 @@ const option = {
   endYear: 2007,
   endMonth: 10,
   gridcodes: ['11111111', '11111112'],
-  endpointFormat: 'https://example.com/%s/%s/%s/%s.json' // [year,1次メッシュコード,2次メッシュコード,3次メッシュコード]という形でフォーマットされる
+  //endpointFormat: 'https://example.com/%s/%s/%s/%s.json' // [year,1次メッシュコード,2次メッシュコード,3次メッシュコード]という形でフォーマットされる
 }
-window.queryAgroEnvData(option).then(data => {
-  // 2005/02 - 2007/10 の、 11111111と11111112 のメッシュコードのデータが得られる
-})
+
+window.queryAgroEnvData(option)
+  .then(data => {
+    // 2005/02 - 2007/10 の、 11111111と11111112 のメッシュコードのデータが得られる
+    cosnole.log(data)
+  })
 ```

@@ -155,6 +155,11 @@ describe("geographical range", () => {
     expect(result).toEqual(false);
   });
 
+  test("should not validate if invalid code contaminated", () => {
+    const result = validateGeographicalRange({ mcode: "60417050,hello,12345678" });
+    expect(result).toEqual(false);
+  });
+
   test("should not validate empty geographical", () => {
     const result = validateGeographicalRange({ mcode: void 0 });
     expect(result).toEqual(false);
