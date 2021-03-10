@@ -57,10 +57,10 @@ export const validateDateRange = (
       endMonth: number;
     } => {
   const { sy, ey, sm, em } = {
-    ey: dateParam.sy,
-    sm: "1",
-    em: "12",
-    ...dateParam,
+    sy: dateParam.sy,
+    ey: dateParam.ey || dateParam.sy,
+    sm: dateParam.sm || "1",
+    em: dateParam.em || "12",
   };
   if (!sy || !ey || !sm || !em) {
     return false;

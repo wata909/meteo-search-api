@@ -71,6 +71,10 @@ export const _queryData = (fetch: Fetch, endpointFormat?: string) => async (
     )
   );
 
+  if (result.some((response) => response === false)) {
+    throw new Error("Invalid API Response");
+  }
+
   const meshCodeMap: QueryResponse = {};
 
   for (let index = 0; index < urlMeshCodeList.length; index++) {

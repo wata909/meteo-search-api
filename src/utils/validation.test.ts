@@ -89,6 +89,24 @@ describe("date range", () => {
     }
   });
 
+  test("should validate date range only with a start year with undefined values", () => {
+    const result = validateDateRange({
+      sy: "2000",
+      ey: undefined,
+      sm: undefined,
+      em: undefined,
+    });
+    if (!result) {
+      throw new Error("invalid");
+    } else {
+      const { startYear, endYear, startMonth, endMonth } = result;
+      expect(startYear).toEqual(2000);
+      expect(endYear).toEqual(2000);
+      expect(startMonth).toEqual(1);
+      expect(endMonth).toEqual(12);
+    }
+  });
+
   test("should not validate date range", () => {
     const result = validateDateRange({
       sy: "2010",

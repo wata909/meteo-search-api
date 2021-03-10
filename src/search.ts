@@ -7,7 +7,7 @@ type LambdaHandler = (
 ) => void;
 
 import { errorResponse } from "./utils/format";
-import { queryData } from "./utils/api";
+import { queryData, QueryResponse } from "./utils/api";
 import { aggregateData } from "./utils/aggregation";
 
 import {
@@ -79,13 +79,18 @@ export const handler: LambdaHandler = async (event, _1, callback) => {
   const { averageScope } = validatedAverageScope;
   const { separatorType } = validatedSeparatorTypes;
 
-  const queryResponse = await queryData({
-    startYear,
-    endYear,
-    startMonth,
-    endMonth,
-    meshCodes,
-  });
+  let queryResponse: QueryResponse;
+  try {
+    queryResponse = await queryData({
+      startYear,
+      endYear,
+      startMonth,
+      endMonth,
+      meshCodes,
+    });
+  } catch (error) {
+    return callback(null, errorResponse(400, "Invalid mcode paramter."));
+  }
   const aggregations = aggregateData({
     queryResponse,
     elementScope,

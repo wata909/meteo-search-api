@@ -106,11 +106,11 @@ const aggregateEachData = (
       day,
       // filter elements
       tm: elementScope.tm ? tm : null,
-      pr: elementScope.tm ? pr : null,
-      tn: elementScope.tm ? tn : null,
-      sr: elementScope.tm ? sr : null,
-      tx: elementScope.tm ? tx : null,
-      sd: elementScope.tm ? sd : null,
+      pr: elementScope.pr ? pr : null,
+      tn: elementScope.tn ? tn : null,
+      sr: elementScope.sr ? sr : null,
+      tx: elementScope.tx ? tx : null,
+      sd: elementScope.sd ? sd : null,
     };
     const key = getAggregationKey(averageScope, item);
     if (!prev[key]) {
