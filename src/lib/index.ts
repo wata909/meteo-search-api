@@ -23,7 +23,7 @@ const queryAgroEnvData = async (option: any) => {
   const geographicalRange = validateGeographicalRange({ mcode });
 
   if (!dateRange) {
-    throw new Error(`Invalid date Range ${JSON.stringify(option)}`);
+    throw new Error(`Invalid date Range, ${JSON.stringify(option)}`);
   }
   if (!geographicalRange) {
     throw new Error(`Invalid geographical Range, ${JSON.stringify(option)}`);
