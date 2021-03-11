@@ -45,7 +45,7 @@ $ npm test
 
 ### プログラムのビルド
 
-以下のコマンドで抽出スクリプトをトランスパイルします。ビルドしたプログラムは、 `cdn/extract.js` として書き出されます。
+以下のコマンドで抽出スクリプトをトランスパイルします。ビルドしたプログラムは、 `docs/extract.js` として書き出されます。
 
 ```shell
 $ npm run build:lib
@@ -86,7 +86,7 @@ $ curl "http://localhost:3000/dev/search?mtype=me&sy=2000&mcode=36225717&element
 抽出スクリプトのデプロイは不要です。以下のように GitHub を CDN としてロードすることができます。
 
 ```html
-<script src="https://agro-env.github.io/meteo-search/cdn/extract.js"></script>
+<script src="https://agro-env.github.io/meteo-search/docs/extract.js"></script>
 ```
 
 抽出スクリプトのソースコードを更新した際は、 GitHub にソースコードをプッシュする前にビルドを行ってください。
@@ -175,7 +175,7 @@ declare global {
 抽出スクリプトは以下のように利用できます。この例では、2005年2月から2007年10月の期間において、36225717及び36225718の3次メッシュのデータを取得します。
 
 ```html
-<script src="https://agro-env.github.io/meteo-search/cdn/extract.js"></script>
+<script src="https://agro-env.github.io/meteo-search/docs/extract.js"></script>
 <script>
   const option = {
     startYear: 2005,

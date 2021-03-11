@@ -27,6 +27,6 @@ module.exports = {
   },
   output: {
     filename: 'extract.js',
-    path: path.resolve(__dirname, 'cdn'),
+    path: path.resolve(__dirname, 'docs'),
   },
 };
