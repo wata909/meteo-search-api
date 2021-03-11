@@ -14,7 +14,10 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.EnvironmentPlugin(['NARO_AGROENV_STATIC_API_ENDPOINT']),
+    new webpack.DefinePlugin({
+      'process.env.NARO_AGROENV_STATIC_API_ENDPOINT': JSON.stringify(process.env.NARO_AGROENV_STATIC_API_ENDPOINT),
+      'process.env.NODE_DEBUG': false
+    }),
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],

@@ -5,11 +5,12 @@ import {
   validateDateRange,
   validateGeographicalRange,
 } from "../utils/validation";
+import { aggregateData } from "../utils/aggregation";
 import fetch from "node-fetch";
 
 type Fetch = typeof fetch;
 
-const queryAgroEnvData = (option: any) => {
+const queryAgroEnvData = async (option: any) => {
   const sy =
     option.startYear === void 0 ? void 0 : option.startYear.toString(10);
   const ey = option.endYear === void 0 ? void 0 : option.endYear.toString(10);
@@ -30,10 +31,26 @@ const queryAgroEnvData = (option: any) => {
 
   const endpointFormat =
     option.endpointFormat || process.env.NARO_AGROENV_STATIC_API_ENDPOINT;
-  return _queryData(
+  const queryResponse = await _queryData(
     (window.fetch as unknown) as Fetch,
     endpointFormat
   )({ ...dateRange, ...geographicalRange });
+
+  const aggregations = aggregateData({
+    queryResponse,
+    elementScope: {
+      tm: true,
+      pr: true,
+      tn: true,
+      sr: true,
+      tx: true,
+      sd: true,
+    },
+    averageScope: "day",
+    separatorType: "json",
+  });
+
+  return aggregations;
 };
 
 declare global {
