@@ -109,8 +109,6 @@ $ $env:AWS_SECRET_ACCESS_KEY = "yyyy"
 
 また、オプションとして、 GitHub の 静的 API サーバー以外のエンドポイントをデータの取得元として指定できます。その場合は以下の環境変数を指定してください。
 
-- `AGRO_ENV_STATIC_API_ENDPOINT`
-
 ```shell
 $ $env:AGRO_ENV_STATIC_API_ENDPOINT = "https://example.com/%s/%s/%s/%s.json"
 ```
@@ -137,7 +135,8 @@ $ npm run remove:v1
 
 ### 抽出スクリプト
 
-抽出スクリプトをロードすると、ブラウザのグローバルスコープに `queryAgroEnvData` という関数が作成されます。
+抽出スクリプトをロードすると、ブラウザの `window` のスコープに `queryAgroEnvData` という関数が作成されます。
+`queryAgroEnvData` は以下のオプションを引数として設定でき、またオブジェクト型のデータの配列を非同期で取得します。
 
 ```typescript
 type Option = {
@@ -173,18 +172,23 @@ declare global {
 
 ### 使用例
 
-```javascript
-const option = {
-  startYear: 2005,
-  startMonth: 2,
-  endYear: 2007,
-  endMonth: 10,
-  gridcodes: ['11111111', '11111112'],
-  endpointFormat: 'https://example.com/%s/%s/%s/%s.json'
-}
+抽出スクリプトは以下のように利用できます。この例では、2005年2月から2007年10月の期間において、36225717及び36225718の3次メッシュのデータを取得します。
 
-window.queryAgroEnvData(option)
-  .then(data => {
-    cosnole.log(data)
-  })
+```html
+<script src="https://agro-env.github.io/meteo-search/cdn/extract.js"></script>
+<script>
+  const option = {
+    startYear: 2005,
+    startMonth: 2,
+    endYear: 2007,
+    endMonth: 10,
+    gridcodes: ['36225717', '36225718'],
+    endpointFormat: 'https://example.com/%s/%s/%s/%s.json'
+  }
+
+  window.queryAgroEnvData(option)
+    .then(data => {
+      cosnole.log(data)
+    })
+</script>
 ```
