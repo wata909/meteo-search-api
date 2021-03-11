@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>NARO AGRO-ENV Request Samples</h1>
+    <h1>AGRO-ENV Request Samples</h1>
     <form>
       <div class="form-group">
 
@@ -66,50 +66,41 @@
   </div>
   <script src="./bundle.js"></script>
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', function () {
 
-      const startYearElement = document.getElementById('start-year')
-      const endYearElement = document.getElementById('end-year')
-      const startMonthElement = document.getElementById('start-month')
-      const endMonthElement = document.getElementById('end-month')
-      const gridcodesElement = document.getElementById('gridcodes')
+      var startYearElement = document.getElementById('start-year')
+      var endYearElement = document.getElementById('end-year')
+      var startMonthElement = document.getElementById('start-month')
+      var endMonthElement = document.getElementById('end-month')
+      var gridcodesElement = document.getElementById('gridcodes')
 
-      const button = document.getElementById('button')
-      const result = document.getElementById('result')
+      var button = document.getElementById('button')
+      var result = document.getElementById('result')
 
-
-      button.addEventListener('click', () => {
+      button.addEventListener('click', function () {
         button.disabled = 'disabled'
-        console.log(startYearElement)
-        const startYearValue = parseInt(startYearElement.value, 10)
-        const endYearValue = parseInt(endYearElement.value, 10)
-        const startMonthValue = parseInt(startMonthElement.value, 10)
-        const endMonthValue = parseInt(endMonthElement.value, 10)
+        var startYearValue = parseInt(startYearElement.value, 10)
+        var endYearValue = parseInt(endYearElement.value, 10)
+        var startMonthValue = parseInt(startMonthElement.value, 10)
+        var endMonthValue = parseInt(endMonthElement.value, 10)
 
-        const startYear = Number.isNaN(startYearValue) ? void 0 : startYearValue
-        const endYear = Number.isNaN(endYearValue) ? void 0 : endYearValue
-        const startMonth = Number.isNaN(startMonthValue) ? void 0 : startMonthValue
-        const endMonth = Number.isNaN(endMonthValue) ? void 0 : endMonthValue
-        const gridcodes = (gridcodesElement.value || "").split(',')
+        var startYear = void 0
+        var endYear = void 0
+        var startMonth = void 0
+        var endMonth = void 0
 
-        window.queryAgroEnvData({
-        startYear,
-        endYear,
-        startMonth,
-        endMonth,
-        gridcodes,
-        endpointFormat: "https://agro-env.github.io/meteo-%s/mesh/%s/%s/%s.json",
-      }).then((data) => {
-        result.value = JSON.stringify(data)
-      }).catch(err => {
-        result.value = err
-      }).then(() => {
-        button.disabled = false
+        if(!Number.isNaN(startYearValue)) { startYear = startYearValue }
+        if(!Number.isNaN(endYearValue)) { endYear = endYearValue }
+        if(!Number.isNaN(startMonthValue)) { startMonth = startMonthValue }
+        if(!Number.isNaN(endMonthValue)) { endMonth = endMonthValue }
+
+        var gridcodes = (gridcodesElement.value || "").split(',')
+
+        window.queryAgroEnvData({ startYear, endYear, startMonth, endMonth, gridcodes })
+          .then(function (data) { result.value = JSON.stringify(data) })
+          .catch(function (err) { result.value = err })
+          .then(function() { button.disabled = false })
       })
-
-      })
-
-
     })
   </script>
 </body>
