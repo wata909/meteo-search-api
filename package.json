@@ -31,11 +31,11 @@
     "build": "rimraf ./dist && tsc",
     "build:lib": "webpack",
     "start:lib": "npx http-server -o -c-1 cdn",
-    "start": "npm run build && sls offline",
-    "deploy:dev": "npm run build && sls deploy --stage=dev",
-    "deploy:v1": "npm run build && sls deploy --stage=v1",
-    "remove:dev": "npm run build && sls remove --stage=dev",
-    "remove:v1": "npm run build && sls remove --stage=v1"
+    "start": "npm run build && serverless offline",
+    "deploy:dev": "npm run build && serverless deploy --stage=dev",
+    "deploy:v1": "npm run build && serverless deploy --stage=v1",
+    "remove:dev": "npm run build && serverless remove --stage=dev",
+    "remove:v1": "npm run build && serverless remove --stage=v1"
   },
   "jest": {
     "preset": "ts-jest",

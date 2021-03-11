@@ -6,6 +6,10 @@
 
 ソースコードは TypeScript で記述されています。 JavaScript にトランスパイルすることで、抽出スクリプトはブラウザの、またサーバーレス API は AWS Lambda 上の Node.js のランタイムで動作します。
 
+## 前提
+
+本ドキュメントに記載されたコマンドは、 PowerShell 上で動作させることを前提にしています。
+
 ## 環境設定
 
 ローカル環境でのプログラムの開発及び AWS 環境へのデプロイの操作には Node.js (> 12) が必要です。以下のサイトからダウンロードすることができます。
@@ -98,14 +102,20 @@ $ git push origin master
 
 API サーバーを AWS 環境にデプロイするためには AWS の認証情報が必要です。AWS のコンソールから IAM を作成し、アクセスキーを取得した上で以下の環境変数を設定してください。
 
-- `AWS_ACCESS_KEY_ID` アクセスキーID
-- `AWS_SECRET_ACCESS_KEY` シークレットアクセスキー
+```shell
+$ $env:AWS_ACCESS_KEY_ID = "xxxx"
+$ $env:AWS_SECRET_ACCESS_KEY = "yyyy"
+```
 
 また、オプションとして、 GitHub の 静的 API サーバー以外のエンドポイントをデータの取得元として指定できます。その場合は以下の環境変数を指定してください。
 
 - `AGRO_ENV_STATIC_API_ENDPOINT`
 
-エンドポイントは、 `https://example.com/%s/%s/%s/%s.json` のようなフォーマット形式で指定します。エンドポイントへのリクエストの際に、`%s` は年、1次メッシュコード、2次メッシュコード、3次メッシュコードの順でフォーマットされます。
+```shell
+$ $env:AGRO_ENV_STATIC_API_ENDPOINT = "https://example.com/%s/%s/%s/%s.json"
+```
+
+エンドポイントは、プレイスホルダー `%s` を4箇所含むフォーマット形式で指定します。これらは順に 年、1次メッシュコード、2次メッシュコード、3次メッシュコードに置換されます。
 
 環境変数を設定した上で以下のコマンドを実行すると AWS 環境上に API サーバーが作成され、エンドポイントのURLが表示されます。
 `dev` 及び `v1` の指定でそれぞれ別の API が作成されます。`dev` は開発環境としての、 `v1` は本番環境としての利用を想定しています。
@@ -170,12 +180,11 @@ const option = {
   endYear: 2007,
   endMonth: 10,
   gridcodes: ['11111111', '11111112'],
-  //endpointFormat: 'https://example.com/%s/%s/%s/%s.json' // [year,1次メッシュコード,2次メッシュコード,3次メッシュコード]という形でフォーマットされる
+  endpointFormat: 'https://example.com/%s/%s/%s/%s.json'
 }
 
 window.queryAgroEnvData(option)
   .then(data => {
-    // 2005/02 - 2007/10 の、 11111111と11111112 のメッシュコードのデータが得られる
     cosnole.log(data)
   })
 ```
