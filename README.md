@@ -1,4 +1,4 @@
-#  @naro/agroenv-search-api
+#  @agro-env/search
 
 ## development
 

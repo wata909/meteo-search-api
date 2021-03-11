@@ -1,4 +1,4 @@
-service: agroenv-search-api
+service: agro-env-search
 frameworkVersion: '2'
 
 plugins:

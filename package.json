@@ -1,5 +1,5 @@
 {
-  "name": "@naro/agroenv-search-api",
+  "name": "@agro-env/search",
   "version": "0.0.0",
   "main": "serverless.yml",
   "private": true,

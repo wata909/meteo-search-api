@@ -26,7 +26,7 @@ module.exports = {
     }
   },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'docs'),
+    filename: 'extract.js',
+    path: path.resolve(__dirname, 'cdn'),
   },
 };
