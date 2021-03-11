@@ -168,6 +168,11 @@ describe("geographical range", () => {
     expect(result).toEqual({ meshCodes: ["60417050", "60417051"] });
   });
 
+  test("should eliminate duplicated code", () => {
+    const result = validateGeographicalRange({ mcode: "60417050,60417050" });
+    expect(result).toEqual({ meshCodes: ["60417050"] });
+  });
+
   test("should not validate geographical range", () => {
     const result = validateGeographicalRange({ mcode: "aaaaa" });
     expect(result).toEqual(false);
