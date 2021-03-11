@@ -26,12 +26,16 @@
   },
   "peerDependencies": {},
   "scripts": {
-    "test": "NARO_AGROENV_STATIC_API_ENDPOINT='https://example.com/%s/%s/%s/%s.json' jest",
+    "test": "AGRO_ENV_STATIC_API_ENDPOINT='https://example.com/%s/%s/%s/%s.json' jest",
     "lint": "eslint ./src/* -c ./eslintrc.js && npm run build && npx prettier ./src/*  --write",
     "build": "rimraf ./dist && tsc",
     "build:lib": "webpack",
+    "start:lib": "npx http-server -o -c-1 cdn",
     "start": "npm run build && sls offline",
-    "deploy:dev": "npm run build && sls deploy --stage=dev"
+    "deploy:dev": "npm run build && sls deploy --stage=dev",
+    "deploy:v1": "npm run build && sls deploy --stage=v1",
+    "remove:dev": "npm run build && sls remove --stage=dev",
+    "remove:v1": "npm run build && sls remove --stage=v1"
   },
   "jest": {
     "preset": "ts-jest",

@@ -89,7 +89,7 @@ export const handler: LambdaHandler = async (event, _1, callback) => {
       meshCodes,
     });
   } catch (error) {
-    return callback(null, errorResponse(400, "Invalid mcode paramter."));
+    return callback(null, errorResponse(404, "Data not found."));
   }
   const aggregations = aggregateData({
     queryResponse,

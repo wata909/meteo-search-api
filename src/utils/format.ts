@@ -39,7 +39,7 @@ export const formatURL = (
   const meshCodeTuple = getUpperMesh(meshCode);
   if (meshCodeTuple) {
     return util.format(
-      endpointFormat || process.env.NARO_AGROENV_STATIC_API_ENDPOINT, // like "https://example.com/%s/%s/%s/%s.json"。%s[] = [year, 1st mesh, 2nd mesh, 3rd mesh]
+      endpointFormat || process.env.AGRO_ENV_STATIC_API_ENDPOINT, // like "https://example.com/%s/%s/%s/%s.json"。%s[] = [year, 1st mesh, 2nd mesh, 3rd mesh]
       year,
       ...meshCodeTuple
     );

@@ -30,7 +30,7 @@ const queryAgroEnvData = async (option: any) => {
   }
 
   const endpointFormat =
-    option.endpointFormat || process.env.NARO_AGROENV_STATIC_API_ENDPOINT;
+    option.endpointFormat || process.env.AGRO_ENV_STATIC_API_ENDPOINT;
   const queryResponse = await _queryData(
     (window.fetch as unknown) as Fetch,
     endpointFormat

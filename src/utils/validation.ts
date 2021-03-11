@@ -97,7 +97,9 @@ export const validateGeographicalRange = ({
   if (meshCodes.some((meshCode) => !meshCode.match(/^[0-9]{8}$/))) {
     return false;
   }
-  const uniqueMeshCodes = meshCodes.filter((meshCode, index, self) => self.indexOf(meshCode) === index)
+  const uniqueMeshCodes = meshCodes.filter(
+    (meshCode, index, self) => self.indexOf(meshCode) === index
+  );
   return { meshCodes: uniqueMeshCodes };
 };
 

@@ -15,7 +15,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NARO_AGROENV_STATIC_API_ENDPOINT': JSON.stringify(process.env.NARO_AGROENV_STATIC_API_ENDPOINT),
+      'process.env.AGRO_ENV_STATIC_API_ENDPOINT': JSON.stringify(process.env.AGRO_ENV_STATIC_API_ENDPOINT),
       'process.env.NODE_DEBUG': false
     }),
   ],
