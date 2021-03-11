@@ -14,7 +14,10 @@ provider:
     shouldStartNameWithService: true
   endpointType: REGIONAL
   environment:
-    NARO_AGROENV_STATIC_API_ENDPOINT: ${env:NARO_AGROENV_STATIC_API_ENDPOINT}
+    NARO_AGROENV_STATIC_API_ENDPOINT: ${env:NARO_AGROENV_STATIC_API_ENDPOINT, self:custom.DEFAULT_STATIC_ENDPOINT}
+
+custom:
+  DEFAULT_STATIC_ENDPOINT: "https://agro-env.github.io/meteo-%s/mesh/%s/%s/%s.json"
 
 package:
   exclude:
