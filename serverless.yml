@@ -1,4 +1,4 @@
-service: agro-env-search
+service: agro-env-meteo-search
 frameworkVersion: '2'
 
 plugins:

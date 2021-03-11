@@ -1,5 +1,5 @@
 {
-  "name": "@agro-env/search",
+  "name": "@agro-env/meteo-search",
   "version": "0.0.0",
   "main": "serverless.yml",
   "private": true,

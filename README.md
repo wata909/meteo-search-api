@@ -1,10 +1,10 @@
-#  @agro-env/search
+#  @agro-env/meteo-search
 
 ## development
 
 ```shell
-$ git clone git@github.com:geolonia/naro-agroenv-search-api.git
-$ cd naro-agroenv-search-api
+$ git clone git@github.com:agro-env/meteo-search.git
+$ cd meteo-search
 $ cp .envrc.sample .envrc
 $ vim .envrc # fill the values
 $ yarn # or `npm install`
@@ -27,6 +27,12 @@ $ npm run build:lib
 
 ```shell
 $ npm run deploy:dev
+```
+
+## load lib
+
+```html
+<script src="https://agro-env.github.io/meteo-search/cdn/ectract.js"></script>
 ```
 
 ## 抽出スクリプト
