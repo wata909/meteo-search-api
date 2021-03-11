@@ -84,7 +84,6 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -128,3 +127,6 @@ package-lock.json
 
 # project specific
 /data
+
+!/dist/.gitkeep
+/dist/**/*.js
