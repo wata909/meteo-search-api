@@ -102,7 +102,7 @@
 
         var gridcodes = (gridcodesElement.value || "").split(',')
 
-        window.queryAgroEnvData({ startYear, endYear, startMonth, endMonth, gridcodes, endpointFormat: "http://127.0.0.1:8081/%s/%s/%s/%s.json" })
+        window.queryAgroEnvData({ startYear, endYear, startMonth, endMonth, gridcodes })
           .then(function (data) { result.value = JSON.stringify(data) })
           .catch(function (err) { result.value = err })
           .then(function() { button.disabled = false })
