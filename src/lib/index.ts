@@ -29,6 +29,18 @@ const queryAgroEnvData = async (option: any) => {
     throw new Error(`Invalid geographical Range, ${JSON.stringify(option)}`);
   }
 
+  // implicit options
+  const average = option.average || "day";
+  const separator = option.separator || "json";
+
+  if (average !== "year" && average !== "month" && average !== "day") {
+    throw new Error(`Invalid average parameter, ${JSON.stringify(option)}`);
+  }
+
+  if (separator !== "json" && separator !== "csv") {
+    throw new Error(`Invalid separator parameter, ${JSON.stringify(option)}`);
+  }
+
   const endpointFormat =
     option.endpointFormat || process.env.AGRO_ENV_STATIC_API_ENDPOINT;
   const queryResponse = await _queryData(
@@ -46,8 +58,8 @@ const queryAgroEnvData = async (option: any) => {
       tx: true,
       sd: true,
     },
-    averageScope: "day",
-    separatorType: "json",
+    averageScope: average, // 'day' as default
+    separatorType: separator, // 'json' as default
   });
 
   return aggregations;
