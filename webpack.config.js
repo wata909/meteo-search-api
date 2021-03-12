@@ -15,7 +15,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.AGRO_ENV_STATIC_API_ENDPOINT': JSON.stringify(process.env.AGRO_ENV_STATIC_API_ENDPOINT),
+      'process.env.AGRO_ENV_STATIC_API_ENDPOINT': JSON.stringify(process.env.AGRO_ENV_STATIC_API_ENDPOINT || "https://agro-env.github.io/meteo-%s/%s/%s/%s.json"),
       'process.env.NODE_DEBUG': false
     }),
   ],
