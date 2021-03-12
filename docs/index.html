@@ -93,14 +93,17 @@
         var startMonth = void 0
         var endMonth = void 0
 
-        if(!Number.isNaN(startYearValue)) { startYear = startYearValue }
-        if(!Number.isNaN(endYearValue)) { endYear = endYearValue }
-        if(!Number.isNaN(startMonthValue)) { startMonth = startMonthValue }
-        if(!Number.isNaN(endMonthValue)) { endMonth = endMonthValue }
+        // polyfill
+        var isNaN2 = Number.isNaN || function(any) { return typeof any === 'number' && isNaN(any) };
+
+        if(!isNaN2(startYearValue)) { startYear = startYearValue }
+        if(!isNaN2(endYearValue)) { endYear = endYearValue }
+        if(!isNaN2(startMonthValue)) { startMonth = startMonthValue }
+        if(!isNaN2(endMonthValue)) { endMonth = endMonthValue }
 
         var gridcodes = (gridcodesElement.value || "").split(',')
 
-        window.queryAgroEnvData({ startYear, endYear, startMonth, endMonth, gridcodes })
+        window.queryAgroEnvData({ startYear: startYear, endYear: endYear, startMonth: startMonth, endMonth: endMonth, gridcodes: gridcodes })
           .then(function (data) { result.value = JSON.stringify(data) })
           .catch(function (err) { result.value = err })
           .then(function() { button.disabled = false })

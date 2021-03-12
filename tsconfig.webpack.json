@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./docs/",
     "noImplicitAny": true,
     "module": "es6",

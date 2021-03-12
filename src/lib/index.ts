@@ -6,9 +6,11 @@ import {
   validateGeographicalRange,
 } from "../utils/validation";
 import { aggregateData } from "../utils/aggregation";
-import fetch from "node-fetch";
+import "whatwg-fetch";
 
-type Fetch = typeof fetch;
+// Polyfill
+import "./polyfills/number";
+import "./polyfills/array";
 
 const queryAgroEnvData = async (option: any) => {
   const sy =
@@ -44,7 +46,7 @@ const queryAgroEnvData = async (option: any) => {
   const endpointFormat =
     option.endpointFormat || process.env.AGRO_ENV_STATIC_API_ENDPOINT;
   const queryResponse = await _queryData(
-    (window.fetch as unknown) as Fetch,
+    window.fetch as any,
     endpointFormat
   )({ ...dateRange, ...geographicalRange });
 
