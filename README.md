@@ -2,7 +2,7 @@
 
 ## 概要
 
-`@agro-env/meteo-search` は、気象情報提供のための静的 API と連携して動作する検索及びフィルターするためのプログラムです。このリポジトリには、クライアントサイドで動作する抽出スクリプト、及び AWS 上で動作するサーバーレス構成の API が含まれています。
+`@agro-env/meteo-search` は、気象情報提供のための静的 API (`https://agro-env.github.io/meteo-YYYY`) と連携して動作する検索及びフィルターするためのプログラムです。このリポジトリには、クライアントサイドで動作する抽出スクリプト、及び AWS 上で動作するサーバーレス構成の API が含まれています。
 
 ソースコードは TypeScript で記述されています。 JavaScript にトランスパイルすることで、抽出スクリプトはブラウザの、またサーバーレス API は AWS Lambda 上の Node.js のランタイムで動作します。
 
@@ -60,11 +60,15 @@ $ npm test
 
 ### プログラムのビルド
 
+#### 抽出スクリプト
+
 以下のコマンドで抽出スクリプトをトランスパイルします。ビルドしたプログラムは、 `docs/extract.js` として書き出されます。
 
 ```shell
 $ npm run build:lib
 ```
+
+#### API サーバー
 
 また、以下のコマンドで API サーバーのソースコードをトランスパイルします。
 
@@ -104,7 +108,7 @@ $ curl "http://localhost:3000/dev/search?mtype=me&sy=2000&mcode=36225717&element
 <script src="https://agro-env.github.io/meteo-search/docs/extract.js"></script>
 ```
 
-抽出スクリプトのソースコードを更新した際は、 GitHub にソースコードをプッシュする前にビルドを行ってください。
+なお、抽出スクリプトのソースコードを更新した際は、 GitHub にソースコードをプッシュすることで CDN のコンテンツを更新できます。GitHub にプッシュする前に以下のようなコマンドを実行してビルドを行ってください。
 
 ```shell
 $ npm run build:lib
@@ -122,14 +126,6 @@ $ $env:AWS_ACCESS_KEY_ID = "xxxx"
 $ $env:AWS_SECRET_ACCESS_KEY = "yyyy"
 ```
 
-また、オプションとして、 GitHub の 静的 API サーバー以外のエンドポイントをデータの取得元として指定できます。その場合は以下の環境変数を指定してください。
-
-```shell
-$ $env:AGRO_ENV_STATIC_API_ENDPOINT = "https://example.com/%s/%s/%s/%s.json"
-```
-
-エンドポイントは、プレイスホルダー `%s` を4箇所含むフォーマット形式で指定します。これらは順に 年、1次メッシュコード、2次メッシュコード、3次メッシュコードに置換されます。
-
 環境変数を設定した上で以下のコマンドを実行すると AWS 環境上に API サーバーが作成され、エンドポイントのURLが表示されます。
 `dev` 及び `v1` の指定でそれぞれ別の API が作成されます。`dev` は開発環境としての、 `v1` は本番環境としての利用を想定しています。
 
@@ -145,6 +141,19 @@ $ npm run deploy:v1
 $ npm run remove:dev
 $ npm run remove:v1
 ```
+
+#### オプション
+
+クラウド API をデプロイする際のオプションとして、 GitHub の 静的 API サーバー以外のエンドポイントをデータの取得元として指定できます。その場合は以下のように環境変数を指定してデプロイを行ってください。
+
+```shell
+$ $env:AGRO_ENV_STATIC_API_ENDPOINT = "https://example.com/%s/%s/%s/%s.json"
+$ npm run deploy:dev
+$ npm run deploy:v1
+```
+
+`AGRO_ENV_STATIC_API_ENDPOINT` の環境変数は、プレイスホルダー `%s` を4箇所含むフォーマット形式の URL で指定します。これらは順に 年、1次メッシュコード、2次メッシュコード、3次メッシュコードに置換されます。
+
 
 ## ドキュメント
 
