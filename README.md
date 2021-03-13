@@ -129,11 +129,13 @@ $ $env:AWS_SECRET_ACCESS_KEY = "yyyy"
 環境変数を設定した上で以下のコマンドを実行すると AWS 環境上に API サーバーが作成され、エンドポイントのURLが表示されます。
 `dev` 及び `v1` の指定でそれぞれ別の API が作成されます。`dev` は開発環境としての、 `v1` は本番環境としての利用を想定しています。
 
-
 ```shell
 $ npm run deploy:dev
 $ npm run deploy:v1
 ```
+初回のデプロイを行うと AWS からランダムなドメインが発行されて割り当てられます(例: `xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com` )。 `dev` 及び `v1` はそれぞれ別のドメインになります。これらのドメインへの HTTP アクセスは自動的に作成した API のパスに対してマッピングされます（例: `https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/v1/search`）。
+
+2回目以降（すでに API がデプロイ済みの場合）に上記のコマンドを実行すると、既存の API を更新するデプロイが行われます。この場合、エンドポイントの URL は以前に作成したもののままになります。
 
 また、以下のコマンドで作成したサーバーを削除することができます。
 
