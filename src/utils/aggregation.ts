@@ -72,7 +72,7 @@ export const aggregateData = ({
   );
 
   if (separatorType === "csv") {
-    const csvParser = new Parser({ quote: "" });
+    const csvParser = new Parser({ quote: "", eol: "\n" });
     const aggregationsWitoutUndefinedProperties = aggregations.map(
       (aggregation) => {
         (Object.keys(aggregation) as (keyof APIResponseItem)[]).forEach(

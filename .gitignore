@@ -116,8 +116,8 @@ out
 .yarn/install-state.gz
 .pnp.*
 
-# Use yarn
-package-lock.json
+# Use npm, not yarn
+yarn.lock
 
 # secrets
 .envrc
