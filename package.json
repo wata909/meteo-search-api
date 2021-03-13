@@ -11,6 +11,7 @@
     "@types/whatwg-fetch": "^0.0.33",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
+    "cross-env": "^7.0.3",
     "es6-promise": "^4.2.8",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
@@ -29,7 +30,7 @@
   },
   "peerDependencies": {},
   "scripts": {
-    "test": "AGRO_ENV_STATIC_API_ENDPOINT='https://example.com/%s/%s/%s/%s.json' jest",
+    "test": "cross-env AGRO_ENV_STATIC_API_ENDPOINT='https://example.com/%s/%s/%s/%s.json' jest",
     "lint": "eslint ./src/* -c ./eslintrc.js && npm run build && npx prettier ./src/*  --write",
     "build": "rimraf ./dist && tsc",
     "build:lib": "webpack",
