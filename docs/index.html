@@ -14,7 +14,6 @@
       <div class="form-group mt-3">
         <label for="start-year">開始年</label>
         <select class="form-select mb-3" id="start-year">
-          <option value="1978" selected>1978</option>
         </select>
         <label for="start-month">開始月</label>
         <select class="form-select mb-3" id="start-month">
@@ -33,7 +32,6 @@
         </select>
         <label for="end-year">終了年</label>
         <select class="form-select mb-3" id="end-year">
-          <option value="1978" selected>1978</option>
         </select>
         <label for="end-month">終了月</label>
         <select class="form-select mb-3" id="end-month">
@@ -77,6 +75,22 @@
       var startMonthElement = document.getElementById('start-month')
       var endMonthElement = document.getElementById('end-month')
       var gridcodesElement = document.getElementById('gridcodes')
+
+      for (var index = 1979; index < 2020; index++) {
+          var startYearOptionElement =document.createElement('option')
+          var endYearOptionElement = document.createElement('option')
+          startYearOptionElement.value = index
+          endYearOptionElement.value = index
+          startYearOptionElement.innerText = index
+          endYearOptionElement.innerText = index
+          if(index === 1979) {
+            startYearOptionElement.selected = true
+          endYearOptionElement.selected = true
+          }
+          startYearElement.appendChild(startYearOptionElement)
+          endYearElement.appendChild(endYearOptionElement)
+      }
+
 
       var button = document.getElementById('button')
       var result = document.getElementById('result')
