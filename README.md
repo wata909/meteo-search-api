@@ -133,6 +133,7 @@ $ $env:AWS_SECRET_ACCESS_KEY = "yyyy"
 $ npm run deploy:dev
 $ npm run deploy:v1
 ```
+
 初回のデプロイを行うと AWS からランダムなドメインが発行されて割り当てられます(例: `xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com` )。 `dev` 及び `v1` はそれぞれ別のドメインになります。これらのドメインへの HTTP アクセスは自動的に作成した API のパスに対してマッピングされます（例: `https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/v1/search`）。
 
 2回目以降（すでに API がデプロイ済みの場合）に上記のコマンドを実行すると、既存の API を更新するデプロイが行われます。この場合、エンドポイントの URL は以前に作成したもののままになります。
