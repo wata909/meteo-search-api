@@ -23,6 +23,7 @@ package:
   exclude:
     - __tests__
     - .*
+    - cdn
     - dist/lib
     - docs/
     - img/
@@ -31,6 +32,7 @@ package:
     - package.json
     - prettierrc
     - README.md
+    - README.cdn.md
     - serverless.yml
     - tsconfig.eslint.json
     - tsconfig.json

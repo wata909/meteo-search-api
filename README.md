@@ -1,8 +1,8 @@
-#  `@agro-env/meteo-search`
+#  `@agro-env/meteo-search-api`
 
 ## 概要
 
-`@agro-env/meteo-search` は、気象情報提供のための静的 API (`https://agro-env.github.io/meteo-YYYY`) と連携して動作する検索及びフィルターするためのプログラムです。このリポジトリには、クライアントサイドで動作する抽出スクリプト、及び AWS 上で動作するサーバーレス構成の API が含まれています。
+`@agro-env/meteo-search-api` は、気象情報提供のための静的 API (`https://agro-env.github.io/meteo-YYYY`) と連携して動作する検索及びフィルターするためのプログラムです。このリポジトリには、クライアントサイドで動作する抽出スクリプト、及び AWS 上で動作するサーバーレス構成の API が含まれています。
 
 ソースコードは TypeScript で記述されています。 JavaScript にトランスパイルすることで、抽出スクリプトはブラウザの、またサーバーレス API は AWS Lambda 上の Node.js のランタイムで動作します。
 
@@ -38,7 +38,7 @@ https://nodejs.org/ja/
 プログラムは以下の Git リポジトリからクローンすることができます。
 
 ```shell
-$ git clone git@github.com:agro-env/meteo-search.git
+$ git clone git@github.com:agro-env/meteo-search-api.git
 ```
 
 ### 依存プログラムのインストール
@@ -46,9 +46,11 @@ $ git clone git@github.com:agro-env/meteo-search.git
 Node.js に同梱されたパッケージマネージャーの npm を使い、依存プログラムをインストールします。依存プログラムには、プログラム本体から利用される各種のユーティリティライブラリ、及び、TypeScript コンパイラなどの開発ツールが含まれています。
 
 ```shell
-$ cd meteo-search
+$ cd meteo-search-api
 $ npm install
 ```
+
+以降のコマンドは、`meteo-search-api`ディレクトリ内で `npm install` が完了した後に実行することを前提としています。
 
 ### テストの実行
 
@@ -102,19 +104,18 @@ $ curl "http://localhost:3000/dev/search?mtype=me&sy=2000&mcode=36225717&element
 
 ### 抽出スクリプト
 
-抽出スクリプトのデプロイは不要です。以下のように GitHub を CDN としてロードすることができます。
+抽出スクリプトをデプロイするには、 以下のコマンドを実行します。
+このコマンドの実行は [@agro-env/meteo-search](https://github.com/agro-env/meteo-search) リポジトリへの書き込み権限が必要です。
+
+
+```shell
+$ npm run deploy:lib
+```
+
+上記のコマンドを実行すると [@agro-env/meteo-search](https://github.com/agro-env/meteo-search) リポジトリが更新され、GitHub Pages として抽出スクリプトがインターネット上から参照可能になります。以下のように読み込むことで任意のWebページで抽出スクリプトが利用できます。
 
 ```html
 <script src="https://agro-env.github.io/meteo-search/extract.js"></script>
-```
-
-なお、抽出スクリプトのソースコードを更新した際は、 GitHub にソースコードをプッシュすることで CDN のコンテンツを更新できます。GitHub にプッシュする前に以下のようなコマンドを実行してビルドを行ってください。
-
-```shell
-$ npm run build:lib
-$ git add .
-$ git commit -m"Update script"
-$ git push origin master
 ```
 
 ### API サーバー
@@ -169,8 +170,10 @@ $ npm run deploy:v1
 type Option = {
   startYear: number; // 開始年
   endYear?: number; // 終了年
-  startYear?: number; // 開始月
+  startMonth?: number; // 開始月
   endMonth?: number; // 終了月
+  average?: 'day' | 'month' | 'year'; // month または year を指定するとその平均を取得。指定しない場合は日別のデータを取得
+  separator?: 'json' | 'csv'; // 出力フォーマット
   gridcodes: string[]; // 3次メッシュコードの配列
   endpointFormat?: string; // エンドポイントのフォーマット。デフォルトでは GitHub Pages での静的配信 API を指定
 }
@@ -188,7 +191,8 @@ type AgroEnvData = {
   sd: number;
 }
 
-type QueryAgroEnvData = (option: Option) => Promise<AgroEnvData[]>
+// オブジェクト、または CSV のテキストとしてデータを取得
+type QueryAgroEnvData = (option: Option) => Promise<AgroEnvData[] | string>
 
 declare global {
   interface Window {

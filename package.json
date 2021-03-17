@@ -1,5 +1,5 @@
 {
-  "name": "@agro-env/meteo-search",
+  "name": "@agro-env/meteo-search-api",
   "version": "0.0.0",
   "main": "serverless.yml",
   "private": true,
@@ -33,14 +33,15 @@
   "scripts": {
     "test": "cross-env AGRO_ENV_STATIC_API_ENDPOINT='https://example.com/%s/%s/%s/%s.json' jest",
     "lint": "eslint ./src/* -c ./eslintrc.js && npm run build && npx prettier ./src/*  --write",
-    "build": "rimraf ./dist && tsc",
-    "build:lib": "webpack",
-    "start:lib": "npx http-server -o -c-1 docs",
     "start": "npm run build && serverless offline",
+    "start:lib": "npx http-server -o -c-1 docs",
+    "build": "rimraf ./dist && tsc",
+    "build:lib": "webpack && rimraf ./cdn && mkdir ./cdn && cp -r ./docs ./cdn/ && cp ./README.cdn.md ./cdn/README.md",
     "deploy:dev": "npm run build && serverless deploy --stage=dev",
     "deploy:v1": "npm run build && serverless deploy --stage=v1",
     "remove:dev": "npm run build && serverless remove --stage=dev",
-    "remove:v1": "npm run build && serverless remove --stage=v1"
+    "remove:v1": "npm run build && serverless remove --stage=v1",
+    "deploy:lib": "npm run build:lib && cd cdn && git init && git remote add origin git@github.com:agro-env/meteo-search.git && git add . && git commit -m 'Force update' && git push -f origin master"
   },
   "jest": {
     "preset": "ts-jest",

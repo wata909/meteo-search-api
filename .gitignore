@@ -130,3 +130,4 @@ yarn.lock
 
 !/dist/.gitkeep
 /dist/**/*.js
+/cdn
