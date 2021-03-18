@@ -214,12 +214,52 @@ declare global {
     endYear: 2007,
     endMonth: 10,
     gridcodes: ['36225717', '36225718'],
-    endpointFormat: 'https://example.com/%s/%s/%s/%s.json'
   }
 
   window.queryAgroEnvData(option)
     .then(data => {
-      cosnole.log(data)
+      cosnole.log(data) // データを JSON 形式で取得
     })
 </script>
+```
+
+#### 集計方法を変更する
+
+`average` 及び `separator` というオプションを指定することで、データの集計方法を変更することができます。
+
+```javascript
+const option = {
+  startYear: 2005,
+  startMonth: 2,
+  endYear: 2007,
+  endMonth: 10,
+  average: 'month',
+  separator: 'csv',
+  gridcodes: ['36225717', '36225718'],
+}
+
+window.queryAgroEnvData(option)
+  .then(data => {
+    cosnole.log(data) // csv フォーマットの文字列で月平均のデータを取得
+  })
+```
+
+#### 接続先のエンドポイントを変更する
+
+抽出スクリプトはデフォルトの設定では `https://agro-env.github.io/meteo-YYYY` という GitHub リポジトリでホスティングしている静的 API に接続します。これをカスタマイズするには、`endpointFormat` というパラメーターにプレイスホルダー `%s` を4箇所含むフォーマット形式の URL を指定します。これらは順に 年、1次メッシュコード、2次メッシュコード、3次メッシュコードに置換されます。これは、API サーバーで指定する `AGRO_ENV_STATIC_API_ENDPOINT` の環境変数と同一のURLのフォーマットです。
+
+```javascript
+const option = {
+  startYear: 2005,
+  startMonth: 2,
+  endYear: 2007,
+  endMonth: 10,
+  gridcodes: ['36225717', '36225718'],
+  endpointFormat: 'https://agro-env.github.io/meteo-average-%s/%s/%s/%s.json'
+}
+
+window.queryAgroEnvData(option)
+  .then(data => {
+    cosnole.log(data) // 変更したAPIのエンドポイントからのデータを取得
+  })
 ```
