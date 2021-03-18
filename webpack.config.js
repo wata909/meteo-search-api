@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack')
+const LicenseCheckerWebpackPlugin = require("license-checker-webpack-plugin");
 
 module.exports = {
   mode: 'production',
@@ -22,6 +23,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       Promise: 'es6-promise',
     }),
+    new LicenseCheckerWebpackPlugin({ outputFilename: "ThirdPartyNotices.txt" })
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
