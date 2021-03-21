@@ -402,3 +402,30 @@ test("should aggregate data as csv by gridcode", () => {
   ].join("\n");
   expect(result).toEqual(csv);
 });
+
+test.only("should round to 3 significant digits", () => {
+  const queryResponse: QueryResponse = {
+    "222": {
+      2001: [
+        ["01-01", 2, 11, null, null, null, null],
+        ["01-02", 3, 14, null, null, null, null],
+        ["01-03", 3, 16, null, null, null, null],
+      ],
+    },
+  };
+  const result = aggregateData({
+    queryResponse,
+    elementScope: { tm: true, tx: true },
+    averageScope: "month",
+    separatorType: "json",
+  });
+  expect(result).toEqual([
+    {
+      gridcode: "222",
+      year: 2001,
+      month: 1,
+      tm: 2.667,
+      tx: 13.667,
+    },
+  ]);
+});
