@@ -8,20 +8,20 @@ type APIResponseItem = {
   month?: number;
   day?: number;
   tm?: number;
-  pr?: number;
-  tn?: number;
-  sr?: number;
   tx?: number;
+  tn?: number;
+  pr?: number;
+  sr?: number;
   sd?: number;
 };
 
 type AggregationDeployMap = {
   [key: string]: {
     tm: { sum: number; count: number };
-    pr: { sum: number; count: number };
-    tn: { sum: number; count: number };
-    sr: { sum: number; count: number };
     tx: { sum: number; count: number };
+    tn: { sum: number; count: number };
+    pr: { sum: number; count: number };
+    sr: { sum: number; count: number };
     sd: { sum: number; count: number };
   };
 };
@@ -95,7 +95,7 @@ const aggregateEachData = (
   averageScope: AverageScope
 ): APIResponseItem[] => {
   const deployMap = data.reduce<AggregationDeployMap>((prev, row) => {
-    const [dateString, tm, pr, tn, sr, tx, sd] = row;
+    const [dateString, tm, tx, tn, pr, sr, sd] = row;
     const [monthString, dayString] = dateString.split("-");
     const month = parseInt(monthString, 10);
     const day = parseInt(dayString, 10);
@@ -106,20 +106,20 @@ const aggregateEachData = (
       day,
       // filter elements
       tm: elementScope.tm ? tm : null,
-      pr: elementScope.pr ? pr : null,
-      tn: elementScope.tn ? tn : null,
-      sr: elementScope.sr ? sr : null,
       tx: elementScope.tx ? tx : null,
+      tn: elementScope.tn ? tn : null,
+      pr: elementScope.pr ? pr : null,
+      sr: elementScope.sr ? sr : null,
       sd: elementScope.sd ? sd : null,
     };
     const key = getAggregationKey(averageScope, item);
     if (!prev[key]) {
       prev[key] = {
         tm: { sum: 0, count: 0 },
-        pr: { sum: 0, count: 0 },
-        tn: { sum: 0, count: 0 },
-        sr: { sum: 0, count: 0 },
         tx: { sum: 0, count: 0 },
+        tn: { sum: 0, count: 0 },
+        pr: { sum: 0, count: 0 },
+        sr: { sum: 0, count: 0 },
         sd: { sum: 0, count: 0 },
       };
     }
@@ -127,21 +127,21 @@ const aggregateEachData = (
       prev[key].tm.sum += item.tm;
       prev[key].tm.count++;
     }
-    if (typeof item.pr === "number") {
-      prev[key].pr.sum += item.pr;
-      prev[key].pr.count++;
+    if (typeof item.tx === "number") {
+      prev[key].tx.sum += item.tx;
+      prev[key].tx.count++;
     }
     if (typeof item.tn === "number") {
       prev[key].tn.sum += item.tn;
       prev[key].tn.count++;
     }
+    if (typeof item.pr === "number") {
+      prev[key].pr.sum += item.pr;
+      prev[key].pr.count++;
+    }
     if (typeof item.sr === "number") {
       prev[key].sr.sum += item.sr;
       prev[key].sr.count++;
-    }
-    if (typeof item.tx === "number") {
-      prev[key].tx.sum += item.tx;
-      prev[key].tx.count++;
     }
     if (typeof item.sd === "number") {
       prev[key].sd.sum += item.sd;
@@ -165,21 +165,21 @@ const aggregateEachData = (
         deployment.tm.count > 0
           ? deployment.tm.sum / deployment.tm.count
           : void 0,
-      pr:
-        deployment.pr.count > 0
-          ? deployment.pr.sum / deployment.pr.count
+      tx:
+        deployment.tx.count > 0
+          ? deployment.tx.sum / deployment.tx.count
           : void 0,
       tn:
         deployment.tn.count > 0
           ? deployment.tn.sum / deployment.tn.count
           : void 0,
+      pr:
+        deployment.pr.count > 0
+          ? deployment.pr.sum / deployment.pr.count
+          : void 0,
       sr:
         deployment.sr.count > 0
           ? deployment.sr.sum / deployment.sr.count
-          : void 0,
-      tx:
-        deployment.tx.count > 0
-          ? deployment.tx.sum / deployment.tx.count
           : void 0,
       sd:
         deployment.sd.count > 0

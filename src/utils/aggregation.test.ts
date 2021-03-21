@@ -11,10 +11,10 @@ test("should filter by element tm", () => {
     queryResponse,
     elementScope: {
       tm: true,
-      pr: false,
-      tn: false,
-      sr: false,
       tx: false,
+      tn: false,
+      pr: false,
+      sr: false,
       sd: false,
     },
     averageScope: "day",
@@ -27,10 +27,10 @@ test("should filter by element tm", () => {
       month: 1,
       day: 1,
       tm: 18.6,
-      pr: void 0,
-      tn: void 0,
-      sr: void 0,
       tx: void 0,
+      tn: void 0,
+      pr: void 0,
+      sr: void 0,
       sd: void 0,
     },
   ]);
@@ -46,10 +46,10 @@ test("should filter by element pr", () => {
     queryResponse,
     elementScope: {
       tm: false,
-      pr: true,
-      tn: false,
-      sr: false,
       tx: false,
+      tn: false,
+      pr: true,
+      sr: false,
       sd: false,
     },
     averageScope: "day",
@@ -62,10 +62,10 @@ test("should filter by element pr", () => {
       month: 1,
       day: 1,
       tm: void 0,
-      pr: 19.5,
-      tn: void 0,
-      sr: void 0,
       tx: void 0,
+      tn: void 0,
+      pr: 2,
+      sr: void 0,
       sd: void 0,
     },
   ]);
@@ -81,10 +81,10 @@ test("should filter by element tn", () => {
     queryResponse,
     elementScope: {
       tm: false,
-      pr: false,
-      tn: true,
-      sr: false,
       tx: false,
+      tn: true,
+      pr: false,
+      sr: false,
       sd: false,
     },
     averageScope: "day",
@@ -97,10 +97,10 @@ test("should filter by element tn", () => {
       month: 1,
       day: 1,
       tm: void 0,
-      pr: void 0,
-      tn: 17.4,
-      sr: void 0,
       tx: void 0,
+      tn: 17.4,
+      pr: void 0,
+      sr: void 0,
       sd: void 0,
     },
   ]);
@@ -116,10 +116,10 @@ test("should filter by element sr", () => {
     queryResponse,
     elementScope: {
       tm: false,
-      pr: false,
-      tn: false,
-      sr: true,
       tx: false,
+      tn: false,
+      pr: false,
+      sr: true,
       sd: false,
     },
     averageScope: "day",
@@ -132,10 +132,10 @@ test("should filter by element sr", () => {
       month: 1,
       day: 1,
       tm: void 0,
-      pr: void 0,
-      tn: void 0,
-      sr: 2,
       tx: void 0,
+      tn: void 0,
+      pr: void 0,
+      sr: 3.5,
       sd: void 0,
     },
   ]);
@@ -151,10 +151,10 @@ test("should filter by element tx", () => {
     queryResponse,
     elementScope: {
       tm: false,
-      pr: false,
-      tn: false,
-      sr: false,
       tx: true,
+      tn: false,
+      pr: false,
+      sr: false,
       sd: false,
     },
     averageScope: "day",
@@ -167,10 +167,10 @@ test("should filter by element tx", () => {
       month: 1,
       day: 1,
       tm: void 0,
-      pr: void 0,
+      tx: 19.5,
       tn: void 0,
+      pr: void 0,
       sr: void 0,
-      tx: 3.5,
       sd: void 0,
     },
   ]);
@@ -186,10 +186,10 @@ test("should filter by element sd", () => {
     queryResponse,
     elementScope: {
       tm: false,
-      pr: false,
-      tn: false,
-      sr: false,
       tx: false,
+      tn: false,
+      pr: false,
+      sr: false,
       sd: true,
     },
     averageScope: "day",
@@ -202,10 +202,10 @@ test("should filter by element sd", () => {
       month: 1,
       day: 1,
       tm: void 0,
-      pr: void 0,
-      tn: void 0,
-      sr: void 0,
       tx: void 0,
+      tn: void 0,
+      pr: void 0,
+      sr: void 0,
       sd: 1,
     },
   ]);
@@ -263,7 +263,7 @@ test("should aggregate data by month", () => {
   };
   const result = aggregateData({
     queryResponse,
-    elementScope: { tm: true, pr: true },
+    elementScope: { tm: true, tx: true },
     averageScope: "month",
     separatorType: "json",
   });
@@ -273,14 +273,14 @@ test("should aggregate data by month", () => {
       year: 2001,
       month: 1,
       tm: 2,
-      pr: 13,
+      tx: 13,
     },
     {
       gridcode: "111",
       year: 2001,
       month: 2,
       tm: 3,
-      pr: 14,
+      tx: 14,
     },
   ]);
 });
@@ -302,7 +302,7 @@ test("should aggregate data by year", () => {
   };
   const result = aggregateData({
     queryResponse,
-    elementScope: { tm: true, pr: true },
+    elementScope: { tm: true, tx: true },
     averageScope: "year",
     separatorType: "json",
   });
@@ -311,13 +311,13 @@ test("should aggregate data by year", () => {
       gridcode: "111",
       year: 2001,
       tm: 2,
-      pr: 13,
+      tx: 13,
     },
     {
       gridcode: "111",
       year: 2002,
       tm: 3,
-      pr: 14,
+      tx: 14,
     },
   ]);
 });
@@ -344,10 +344,10 @@ test("should aggregate data by gridcode", () => {
     queryResponse,
     elementScope: {
       tm: true,
-      pr: true,
+      tx: true,
       tn: false,
+      pr: false,
       sr: false,
-      tx: false,
       sd: false,
     },
     averageScope: "month",
@@ -359,14 +359,14 @@ test("should aggregate data by gridcode", () => {
       year: 2001,
       month: 1,
       tm: 2,
-      pr: 13,
+      tx: 13,
     },
     {
       gridcode: "222",
       year: 2001,
       month: 1,
       tm: 3,
-      pr: 14,
+      tx: 14,
     },
   ]);
 });
@@ -391,12 +391,12 @@ test("should aggregate data as csv by gridcode", () => {
 
   const result = aggregateData({
     queryResponse,
-    elementScope: { tm: true, pr: true },
+    elementScope: { tm: true, tx: true },
     averageScope: "month",
     separatorType: "csv",
   });
   const csv = [
-    "gridcode,year,month,tm,pr",
+    "gridcode,year,month,tm,tx",
     "111,2001,1,2,13",
     "222,2001,1,3,14",
   ].join("\n");
