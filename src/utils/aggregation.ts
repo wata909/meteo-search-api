@@ -39,6 +39,10 @@ const getAggregationKey = (
   }
 };
 
+const average = (sum: number, count: number, digit: number) => {
+  return Math.round((sum / count) * 10 ** digit) / 10 ** digit;
+};
+
 export const aggregateData = ({
   queryResponse,
   elementScope,
@@ -163,27 +167,27 @@ const aggregateEachData = (
       day,
       tm:
         deployment.tm.count > 0
-          ? deployment.tm.sum / deployment.tm.count
+          ? average(deployment.tm.sum, deployment.tm.count, 3)
           : void 0,
       tx:
         deployment.tx.count > 0
-          ? deployment.tx.sum / deployment.tx.count
+          ? average(deployment.tx.sum, deployment.tx.count, 3)
           : void 0,
       tn:
         deployment.tn.count > 0
-          ? deployment.tn.sum / deployment.tn.count
+          ? average(deployment.tn.sum, deployment.tn.count, 3)
           : void 0,
       pr:
         deployment.pr.count > 0
-          ? deployment.pr.sum / deployment.pr.count
+          ? average(deployment.pr.sum, deployment.pr.count, 3)
           : void 0,
       sr:
         deployment.sr.count > 0
-          ? deployment.sr.sum / deployment.sr.count
+          ? average(deployment.sr.sum, deployment.sr.count, 3)
           : void 0,
       sd:
         deployment.sd.count > 0
-          ? deployment.sd.sum / deployment.sd.count
+          ? average(deployment.sd.sum, deployment.sd.count, 3)
           : void 0,
     };
   });
