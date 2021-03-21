@@ -56,6 +56,23 @@
       </div>
 
       <div class="form-group mb-3">
+        <label for="average">平均値を取得</label>
+        <select class="form-select mb-3" id="average">
+          <option value="" selected>(指定なし)</option>
+          <option value="month">月平均</option>
+          <option value="year">年平均</option>
+        </select>
+      </div>
+
+      <div class="form-group mb-3">
+        <label for="separator">フォーマット</label>
+        <select class="form-select mb-3" id="separator">
+          <option value="json" selected>JSON</option>
+          <option value="csv">CSV</option>
+        </select>
+      </div>
+
+      <div class="form-group mb-3">
         <button id="button" type="button" class="btn btn-primary">データを取得</button>
       </div>
 
@@ -75,6 +92,8 @@
       var startMonthElement = document.getElementById('start-month')
       var endMonthElement = document.getElementById('end-month')
       var gridcodesElement = document.getElementById('gridcodes')
+      var averageScopeElement = document.getElementById('average')
+      var separatorTypeElement = document.getElementById('separator')
 
       for (var index = 1978; index < 2020; index++) {
           var startYearOptionElement =document.createElement('option')
@@ -90,7 +109,6 @@
           startYearElement.appendChild(startYearOptionElement)
           endYearElement.appendChild(endYearOptionElement)
       }
-
 
       var button = document.getElementById('button')
       var result = document.getElementById('result')
@@ -116,9 +134,25 @@
         if(!isNaN2(endMonthValue)) { endMonth = endMonthValue }
 
         var gridcodes = (gridcodesElement.value || "").split(',')
+        var averageScope = averageScopeElement.value
+        var separatorType = separatorTypeElement.value
 
-        window.queryAgroEnvData({ startYear: startYear, endYear: endYear, startMonth: startMonth, endMonth: endMonth, gridcodes: gridcodes })
-          .then(function (data) { result.value = JSON.stringify(data) })
+        window.queryAgroEnvData({
+          startYear: startYear,
+          endYear: endYear,
+          startMonth: startMonth,
+          endMonth: endMonth,
+          gridcodes: gridcodes,
+          average: averageScope,
+          separator: separatorType,
+        })
+          .then(function (data) {
+            if(typeof data === 'string') {
+              result.value = data
+            } else {
+              result.value = JSON.stringify(data)
+            }
+           })
           .catch(function (err) { result.value = err })
           .then(function() { button.disabled = false })
       })
