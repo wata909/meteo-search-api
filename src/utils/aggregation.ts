@@ -167,27 +167,27 @@ const aggregateEachData = (
       day,
       tm:
         deployment.tm.count > 0
-          ? average(deployment.tm.sum, deployment.tm.count, 3)
+          ? average(deployment.tm.sum, deployment.tm.count, 5)
           : void 0,
       tx:
         deployment.tx.count > 0
-          ? average(deployment.tx.sum, deployment.tx.count, 3)
+          ? average(deployment.tx.sum, deployment.tx.count, 5)
           : void 0,
       tn:
         deployment.tn.count > 0
-          ? average(deployment.tn.sum, deployment.tn.count, 3)
+          ? average(deployment.tn.sum, deployment.tn.count, 5)
           : void 0,
       pr:
         deployment.pr.count > 0
-          ? average(deployment.pr.sum, deployment.pr.count, 3)
+          ? average(deployment.pr.sum, deployment.pr.count, 5)
           : void 0,
       sr:
         deployment.sr.count > 0
-          ? average(deployment.sr.sum, deployment.sr.count, 3)
+          ? average(deployment.sr.sum, deployment.sr.count, 5)
           : void 0,
       sd:
         deployment.sd.count > 0
-          ? average(deployment.sd.sum, deployment.sd.count, 3)
+          ? average(deployment.sd.sum, deployment.sd.count, 5)
           : void 0,
     };
   });

@@ -424,8 +424,8 @@ test.only("should round to 3 significant digits", () => {
       gridcode: "222",
       year: 2001,
       month: 1,
-      tm: 2.667,
-      tx: 13.667,
+      tm: 2.66667,
+      tx: 13.66667,
     },
   ]);
 });
