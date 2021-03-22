@@ -42,7 +42,7 @@
     "deploy:v1": "npm run build && serverless deploy --stage=v1",
     "remove:dev": "npm run build && serverless remove --stage=dev",
     "remove:v1": "npm run build && serverless remove --stage=v1",
-    "deploy:lib": "npm run build:lib && cd cdn && git init && git remote add origin git@github.com:agro-env/meteo-search.git && git add . && git commit -m 'Force update' && git push -f origin master"
+    "deploy:lib": "npm run build:lib && pushd cdn && git init && git remote add origin git@github.com:agro-env/meteo-search.git && git add . && git commit -m 'Force update' && git push -f origin master && popd"
   },
   "jest": {
     "preset": "ts-jest",
